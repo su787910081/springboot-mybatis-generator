@@ -74,7 +74,7 @@
 
         <!-- 生成mapxml文件 -->
         <!-- 这个目录必须存在，若不存在则不会生成对应的文件 -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources/mybatis" >
+        <sqlMapGenerator targetPackage="version01/mapper" targetProject="src/main/resources/mybatis" >
             <property name="enableSubPackages" value="false" />
         </sqlMapGenerator>
 
