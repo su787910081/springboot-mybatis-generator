@@ -55,14 +55,24 @@
             <!-- 设置 useInformationSchema 属性为 true -->
             <property name="useInformationSchema" value="true" />
         </jdbcConnection>
+
+        <!-- 类型转换 -->
+        <javaTypeResolver>
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
         <!-- 生成实体的位置 -->
         <javaModelGenerator targetPackage="com.suyh.model" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
+            <!-- 看样子是去掉前后的空白字符 -->
+            <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <!-- 生成 Mapper 接口的位置 -->
-        <sqlMapGenerator targetPackage="com.suyh.mapper" targetProject="src/main/java">
-            <property name="enableSubPackages" value="true"/>
+        <!-- 生成mapxml文件 -->
+        <!-- 这个目录必须存在，若不存在则不会生成对应的文件 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources/mybatis" >
+            <property name="enableSubPackages" value="false" />
         </sqlMapGenerator>
 
         <!-- 生成 Mapper XML 的位置 -->
@@ -71,8 +81,50 @@
         </javaClientGenerator>
 
 
+        <!-- 需要生成的实体类对应的表名，多个实体类复制多份该配置即可 -->
+        <!-- 每一个table 标签对应数据库中的一张表 -->
+        <!-- 客户/供应商基本信息表结构 -->
+        <table tableName="crm_customer_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
         <!-- 客户/供应商结算信息表结构 -->
         <table tableName="crm_settle_money_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <!-- 客户/供应商联系人信息表 -->
+        <table tableName="crm_contacts_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <!-- 收款信息(供应商) -->
+        <table tableName="crm_payee_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <!-- 发票信息(客户) -->
+        <table tableName="crm_invoice_info"
                enableCountByExample="true"
                enableUpdateByExample="true"
                enableDeleteByExample="true"
