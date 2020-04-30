@@ -1,6 +1,7 @@
 package com.suyh.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Table: crm_customer_info
@@ -68,6 +69,18 @@ public class CrmCustomerInfo implements Serializable {
      *   平台管理员帐号，非自有系统用户才会有。
      */
     private String platformAdminUser;
+
+    /**
+     * Column: created_date
+     *   创建时间
+     */
+    private Date createdDate;
+
+    /**
+     * Column: settle_day
+     *   月结日，以0 表示自然月
+     */
+    private Integer settleDay;
 
     /**
      * Column: using_status
@@ -163,6 +176,22 @@ public class CrmCustomerInfo implements Serializable {
         this.platformAdminUser = platformAdminUser == null ? null : platformAdminUser.trim();
     }
 
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Integer getSettleDay() {
+        return settleDay;
+    }
+
+    public void setSettleDay(Integer settleDay) {
+        this.settleDay = settleDay;
+    }
+
     public String getUsingStatus() {
         return usingStatus;
     }
@@ -187,6 +216,8 @@ public class CrmCustomerInfo implements Serializable {
         sb.append(", address=").append(address);
         sb.append(", usPlatSystem=").append(usPlatSystem);
         sb.append(", platformAdminUser=").append(platformAdminUser);
+        sb.append(", createdDate=").append(createdDate);
+        sb.append(", settleDay=").append(settleDay);
         sb.append(", usingStatus=").append(usingStatus);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

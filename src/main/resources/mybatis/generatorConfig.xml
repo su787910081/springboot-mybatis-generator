@@ -58,6 +58,8 @@
 
         <!-- 类型转换 -->
         <javaTypeResolver>
+            <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer true，
+            把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
             <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
@@ -93,45 +95,45 @@
             <generatedKey column="id" sqlStatement="Mysql" identity="true" />
         </table>
 
-        <!-- 客户/供应商结算信息表结构 -->
-        <table tableName="crm_settle_money_info"
-               enableCountByExample="true"
-               enableUpdateByExample="true"
-               enableDeleteByExample="true"
-               enableSelectByExample="true"
-               selectByExampleQueryId="true">
-            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
-        </table>
+<!--        &lt;!&ndash; 客户/供应商结算信息表结构 &ndash;&gt;-->
+<!--        <table tableName="crm_settle_money_info"-->
+<!--               enableCountByExample="true"-->
+<!--               enableUpdateByExample="true"-->
+<!--               enableDeleteByExample="true"-->
+<!--               enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true">-->
+<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
+<!--        </table>-->
 
-        <!-- 客户/供应商联系人信息表 -->
-        <table tableName="crm_contacts_info"
-               enableCountByExample="true"
-               enableUpdateByExample="true"
-               enableDeleteByExample="true"
-               enableSelectByExample="true"
-               selectByExampleQueryId="true">
-            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
-        </table>
+<!--        &lt;!&ndash; 客户/供应商联系人信息表 &ndash;&gt;-->
+<!--        <table tableName="crm_contacts_info"-->
+<!--               enableCountByExample="true"-->
+<!--               enableUpdateByExample="true"-->
+<!--               enableDeleteByExample="true"-->
+<!--               enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true">-->
+<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
+<!--        </table>-->
 
-        <!-- 收款信息(供应商) -->
-        <table tableName="crm_payee_info"
-               enableCountByExample="true"
-               enableUpdateByExample="true"
-               enableDeleteByExample="true"
-               enableSelectByExample="true"
-               selectByExampleQueryId="true">
-            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
-        </table>
+<!--        &lt;!&ndash; 收款信息(供应商) &ndash;&gt;-->
+<!--        <table tableName="crm_payee_info"-->
+<!--               enableCountByExample="true"-->
+<!--               enableUpdateByExample="true"-->
+<!--               enableDeleteByExample="true"-->
+<!--               enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true">-->
+<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
+<!--        </table>-->
 
-        <!-- 发票信息(客户) -->
-        <table tableName="crm_invoice_info"
-               enableCountByExample="true"
-               enableUpdateByExample="true"
-               enableDeleteByExample="true"
-               enableSelectByExample="true"
-               selectByExampleQueryId="true">
-            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
-        </table>
+<!--        &lt;!&ndash; 发票信息(客户) &ndash;&gt;-->
+<!--        <table tableName="crm_invoice_info"-->
+<!--               enableCountByExample="true"-->
+<!--               enableUpdateByExample="true"-->
+<!--               enableDeleteByExample="true"-->
+<!--               enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true">-->
+<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
+<!--        </table>-->
 
     </context>
 

@@ -5,6 +5,7 @@
 
 -- 客户/供应商 
 -- 基本信息表结构
+-- 在这张表中尽量多一些类型，主要处理就在这张表中来做测试和验证
 
     DROP TABLE IF EXISTS crm_customer_info;
     CREATE TABLE crm_customer_info (
@@ -18,6 +19,8 @@
         address VARCHAR(128) NULL COMMENT '联系地址',
         us_plat_system VARCHAR(3) NULL COMMENT '是否使用平台系统(当有自有系统时则可不使用平台系统)【radio:1-是,2-否】',
         platform_admin_user VARCHAR(30) NULL COMMENT '平台管理员帐号，非自有系统用户才会有。',
+        created_date DATETIME NULL COMMENT '创建时间',
+        settle_day INTEGER COMMENT '月结日，以0 表示自然月',
         -- settle_money_id VARCHAR(36) NULL COMMENT '结算信息ID，映射到结算信息表',
         using_status VARCHAR(3) NOT NULL COMMENT '启用状态【radio:1-是(启用),2-否(停用)】'
     ) ENGINE = INNODB COMMENT '客户基本信息表结构：内部客户、供应商、承运商';
