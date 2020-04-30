@@ -3,6 +3,7 @@ package com.suyh.version02.custom;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
+import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.Interface;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
@@ -39,7 +40,7 @@ public class GenPlugin extends PluginAdapter {
     // validate方法调用，该方法一般用于验证传给参数的正确性，如果该方法返回false，则该插件结束执行
     @Override
     public boolean validate(List<String> list) {
-        // 这里需要打开
+        // 这里需要打开，如果返回false ，则类注解和注释都生成不了。不知道是怎么走的流程。
         return true;
     }
 
@@ -56,6 +57,7 @@ public class GenPlugin extends PluginAdapter {
     /**
      * suyh: 在类上面添加注解，以及添加注释.
      * 这里添加的是一个 @Data 的注解
+     * 这里应该是要将所有需要 import 的都在这里做处理。
      * @param topLevelClass
      * @param introspectedTable
      * @return
@@ -91,6 +93,27 @@ public class GenPlugin extends PluginAdapter {
         sb.append(getDateString());
         topLevelClass.addJavaDocLine(sb.toString());
         topLevelClass.addJavaDocLine(" */");
+        return true;
+    }
+
+    /**
+     * 字段处理，在这里可以添加字段的注解，注释等
+     * 但是需要 validate() 返回true
+     * @param field
+     * @param topLevelClass
+     * @param introspectedColumn
+     * @param introspectedTable
+     * @param modelClassType
+     * @return
+     */
+    @Override
+    public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
+                                       IntrospectedTable introspectedTable, ModelClassType modelClassType) {
+
+        String a = "@ApiModelProperty(value = \"联系人ID\")";
+        field.addAnnotation(a);
+
+
         return true;
     }
 
