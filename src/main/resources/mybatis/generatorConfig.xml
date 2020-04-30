@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- 指定数据库驱动的jdbc驱动jar包的位置 -->
+    <!-- 不再需要，因为 jar 包已经在 classpath 中
+    <classPathEntry location="./mysql-connector-java-5.1.40.jar" />
+    -->
+
+    <context id="mysql" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple" >
+        <!-- 生成的 Java 文件的编码 -->
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 格式化 Java 代码 -->
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <!-- 格式化 XML 代码 -->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+
+        <!-- 自定义注释生成器 -->
+        <commentGenerator type="com.suyh.custom.CustomCommentGenerator">
+            <property name="author" value="Michael Chow"/>
+            <property name="dateFormat" value="yyyy/MM/dd"/>
+        </commentGenerator>
+
+        <!-- 配置数据库连接 -->
+<!--        spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver-->
+<!--        <jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://docker:3306/suyh_db?characterEncoding=utf-8&amp;useSSL=false"
+                        userId="root" password="root">
+            <!-- 设置 useInformationSchema 属性为 true -->
+            <property name="useInformationSchema" value="true" />
+        </jdbcConnection>
+
+        <!-- 生成实体的位置 -->
+        <javaModelGenerator targetPackage="com.suyh.model" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成 Mapper 接口的位置 -->
+        <sqlMapGenerator targetPackage="com.suyh.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- 生成 Mapper XML 的位置 -->
+        <javaClientGenerator targetPackage="com.suyh.mapper" type="XMLMAPPER" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+        <!-- 客户/供应商结算信息表结构 -->
+        <table tableName="crm_settle_money_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+    </context>
+
+</generatorConfiguration>
