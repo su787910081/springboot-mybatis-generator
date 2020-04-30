@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis com.suyh.Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 加载配置文件，为下面读取数据库信息准备 -->
+    <properties resource="application.properties"/>
+
+    <!--defaultModelType="flat" 大数据字段，不分表 -->
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="autoDelimitKeywords" value="true" />
+        <property name="beginningDelimiter" value="`" />
+        <property name="endingDelimiter" value="`" />
+
+        <!-- 指定生成的java文件的编码,没有直接生成到项目时中文可能会乱码 -->
+        <property name="javaFileEncoding" value="utf-8" />
+
+        <!-- 生成的entity，将implements Serializable -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+
+        <!-- 注释 -->
+        <!-- 这里的type里写的是你的自定义实现类的类全路径 -->
+        <commentGenerator type="com.suyh.springboot.custom.CustomCommentGenerator">
+            <property name="suppressAllComments" value="false"/><!-- 是否取消注释 -->
+            <property name="suppressDate" value="true" /> <!-- 是否生成注释代时间戳-->
+            <!-- 添加表字段的注释，这个需要同时配置 suppressAllComments = false 默认就是false -->
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <!--数据库链接地址账号密码-->
+        <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
+                        connectionURL="${spring.datasource.url}"
+                        userId="${spring.datasource.username}"
+                        password="${spring.datasource.password}">
+            <!-- 对实体类添加注释映射到表的注释 -->
+            <!-- 设置 useInformationSchema 属性为 true -->
+            <property name="useInformationSchema" value="true" />
+        </jdbcConnection>
+
+        <!-- 类型转换 -->
+        <javaTypeResolver>
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--生成Model类存放位置-->
+        <javaModelGenerator targetPackage="${mybatis.type-aliases-package}" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成mapxml文件 -->
+        <!-- 这个目录必须存在，若不存在则不会生成对应的文件 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources/mybatis" >
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+
+        <!-- 生成mapxml对应client，也就是接口dao -->
+        <javaClientGenerator targetPackage="com.suyh.springboot.dao" targetProject="src/main/java" type="XMLMAPPER" >
+            <!-- generatedKey用于生成生成主键的方法 -->
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+
+        <!-- 需要生成的实体类对应的表名，多个实体类复制多份该配置即可 -->
+        <!-- 每一个table 标签对应数据库中的一张表 -->
+        <!-- 客户/供应商基本信息表结构 -->
+        <table tableName="crm_customer_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <!-- 客户/供应商结算信息表结构 -->
+        <table tableName="crm_settle_money_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <!-- 客户/供应商联系人信息表 -->
+        <table tableName="crm_contacts_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <!-- 收款信息(供应商) -->
+        <table tableName="crm_payee_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <!-- 发票信息(客户) -->
+        <table tableName="crm_invoice_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+
+
+    </context>
+</generatorConfiguration>
