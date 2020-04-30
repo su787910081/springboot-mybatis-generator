@@ -29,7 +29,7 @@ public class GenPlugin extends PluginAdapter {
     @Override
     public void setContext(Context context) {
         super.setContext(context);
-        // 设置默认的注释生成器
+        // 设置自定义的注释生成器: GenCommentGenerator
         commentCfg = new CommentGeneratorConfiguration();
         commentCfg.setConfigurationType(GenCommentGenerator.class.getCanonicalName());
         context.setCommentGeneratorConfiguration(commentCfg);
@@ -44,6 +44,12 @@ public class GenPlugin extends PluginAdapter {
         return true;
     }
 
+    /**
+     * 这里拿到的是  plugin 标签下面的 property 标签下面的属性数据
+     * 所以我们可以在这里添加配置属性，比如我们要添加哪些注解。
+     *
+     * @param properties
+     */
     @Override
     public void setProperties(Properties properties) {
 

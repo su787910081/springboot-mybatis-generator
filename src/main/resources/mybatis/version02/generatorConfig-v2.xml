@@ -34,7 +34,7 @@
 
         <!-- 自定义注释生成器 -->
         <!--        <commentGenerator type="com.suyh.version01.custom.CustomCommentGenerator">-->
-        <commentGenerator type="com.suyh.version02.custom.GenCommentGenerator">
+        <commentGenerator>
             <property name="author" value="Michael Chow"/>
             <property name="dateFormat" value="yyyy-MM-dd"/>
 
