@@ -5,46 +5,88 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class CrmCustomerInfo implements Serializable {
-    //主键：客户ID
+    /**
+     * Column: customer_id
+     *   主键：客户ID
+     */
     private String customerId;
 
-    //客户全称
+    /**
+     * Column: full_name
+     *   客户全称
+     */
     private String fullName;
 
-    //客户简称
+    /**
+     * Column: short_name
+     *   客户简称
+     */
     private String shortName;
 
-    //负责人
+    /**
+     * Column: manager_name
+     *   负责人
+     */
     private String managerName;
 
-    //联系电话
+    /**
+     * Column: manager_phone
+     *   联系电话
+     */
     private String managerPhone;
 
-    //是否内部用户(这个字段似乎有些多余了)【radio:1-是,2-否】
+    /**
+     * Column: inner_customer
+     *   是否内部用户(这个字段似乎有些多余了)【radio:1-是,2-否】
+     */
     private String innerCustomer;
 
-    //客户类型【select:1-内部客户,2-供应商,3-承运商】
+    /**
+     * Column: customer_type
+     *   客户类型【select:1-内部客户,2-供应商,3-承运商】
+     */
     private String customerType;
 
-    //联系地址
+    /**
+     * Column: address
+     *   联系地址
+     */
     private String address;
 
-    //是否使用平台系统(当有自有系统时则可不使用平台系统)【radio:1-是,2-否】
+    /**
+     * Column: us_plat_system
+     *   是否使用平台系统(当有自有系统时则可不使用平台系统)【radio:1-是,2-否】
+     */
     private String usPlatSystem;
 
-    //平台管理员帐号，非自有系统用户才会有。
+    /**
+     * Column: platform_admin_user
+     *   平台管理员帐号，非自有系统用户才会有。
+     */
     private String platformAdminUser;
 
-    //创建时间
+    /**
+     * Column: created_date
+     *   创建时间
+     */
     private Date createdDate;
 
-    //月结日，以0 表示自然月
+    /**
+     * Column: settle_day
+     *   月结日，以0 表示自然月
+     */
     private Integer settleDay;
 
-    //价格，10 位长度，两位小数位
+    /**
+     * Column: price
+     *   价格，10 位长度，两位小数位
+     */
     private BigDecimal price;
 
-    //启用状态【radio:1-是(启用),2-否(停用)】
+    /**
+     * Column: using_status
+     *   启用状态【radio:1-是(启用),2-否(停用)】
+     */
     private Long usingStatus;
 
     private static final long serialVersionUID = 1L;

@@ -60,10 +60,6 @@ public class GenCommentGenerator implements CommentGenerator {
             // this.addJavadocTag(field, false);
             field.addJavaDocLine(" */");
         }
-
-        if (StringUtility.stringHasValue(introspectedColumn.getRemarks())) {
-            field.addJavaDocLine("//" + introspectedColumn.getRemarks());
-        }
     }
 
     @Override
