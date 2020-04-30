@@ -22,7 +22,7 @@
             <version>8.0.12</version>
         </dependency>
 
-        <!-- MyBatis com.suyh.Generator -->
+        <!-- MyBatis com.suyh.version01.Generator -->
         <dependency>
             <groupId>org.mybatis.generator</groupId>
             <artifactId>mybatis-generator-core</artifactId>

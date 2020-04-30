@@ -1,4 +1,4 @@
-package com.suyh.custom;
+package com.suyh.version01.custom;
 
 import org.mybatis.generator.api.*;
 import org.mybatis.generator.api.dom.java.*;

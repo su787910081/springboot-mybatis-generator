@@ -1,4 +1,4 @@
-package com.suyh.model;
+package com.suyh.version01.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

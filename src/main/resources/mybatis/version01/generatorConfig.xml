@@ -26,7 +26,7 @@
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
 
         <!-- 自定义注释生成器 -->
-        <commentGenerator type="com.suyh.custom.CustomCommentGenerator">
+        <commentGenerator type="com.suyh.version01.custom.CustomCommentGenerator">
             <property name="author" value="Michael Chow"/>
             <property name="dateFormat" value="yyyy-MM-dd"/>
 
@@ -66,7 +66,7 @@
         </javaTypeResolver>
 
         <!-- 生成实体的位置 -->
-        <javaModelGenerator targetPackage="com.suyh.model" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.suyh.version01.model" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <!-- 在实体类的set 方法中直接trim() -->
             <property name="trimStrings" value="true"/>
@@ -79,7 +79,7 @@
         </sqlMapGenerator>
 
         <!-- 生成 Mapper XML 的位置 -->
-        <javaClientGenerator targetPackage="com.suyh.mapper" type="XMLMAPPER" targetProject="src/main/java">
+        <javaClientGenerator targetPackage="com.suyh.version01.mapper" type="XMLMAPPER" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 

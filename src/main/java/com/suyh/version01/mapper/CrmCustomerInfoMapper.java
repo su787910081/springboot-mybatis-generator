@@ -1,6 +1,6 @@
-package com.suyh.mapper;
+package com.suyh.version01.mapper;
 
-import com.suyh.model.CrmCustomerInfo;
+import com.suyh.version01.model.CrmCustomerInfo;
 import java.util.List;
 
 public interface CrmCustomerInfoMapper {
