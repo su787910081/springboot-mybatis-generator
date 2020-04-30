@@ -94,7 +94,9 @@ public class CustomCommentGenerator implements CommentGenerator {
         }
     }
 
-    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable) {
+    public void addClassComment(
+            InnerClass innerClass,
+            IntrospectedTable introspectedTable) {
         if (!this.suppressAllComments) {
             StringBuilder sb = new StringBuilder();
             innerClass.addJavaDocLine("/**");
@@ -107,7 +109,10 @@ public class CustomCommentGenerator implements CommentGenerator {
         }
     }
 
-    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {
+    public void addClassComment(
+            InnerClass innerClass,
+            IntrospectedTable introspectedTable,
+            boolean markAsDoNotDelete) {
         if (!this.suppressAllComments) {
             StringBuilder sb = new StringBuilder();
             innerClass.addJavaDocLine("/**");
@@ -154,7 +159,8 @@ public class CustomCommentGenerator implements CommentGenerator {
      * @param introspectedTable
      * @param introspectedColumn
      */
-    public void addFieldComment(Field field, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
+    public void addFieldComment(Field field,
+                                IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
         if (!this.suppressAllComments) {
             field.addJavaDocLine("/**");
 
@@ -173,7 +179,8 @@ public class CustomCommentGenerator implements CommentGenerator {
         }
     }
 
-    public void addFieldComment(Field field, IntrospectedTable introspectedTable) {
+    public void addFieldComment(Field field,
+                                IntrospectedTable introspectedTable) {
         if (!this.suppressAllComments) {
             StringBuilder sb = new StringBuilder();
             field.addJavaDocLine("/**");
@@ -246,25 +253,39 @@ public class CustomCommentGenerator implements CommentGenerator {
 //        }
     }
 
-    public void addGeneralMethodAnnotation(Method method, IntrospectedTable introspectedTable, Set<FullyQualifiedJavaType> imports) {
+    public void addGeneralMethodAnnotation(
+            Method method,
+            IntrospectedTable introspectedTable,
+            Set<FullyQualifiedJavaType> imports) {
         imports.add(new FullyQualifiedJavaType("javax.annotation.Generated"));
         String comment = "Source Table: " + introspectedTable.getFullyQualifiedTable().toString();
         method.addAnnotation(this.getGeneratedAnnotation(comment));
     }
 
-    public void addGeneralMethodAnnotation(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn, Set<FullyQualifiedJavaType> imports) {
+    public void addGeneralMethodAnnotation(
+            Method method,
+            IntrospectedTable introspectedTable,
+            IntrospectedColumn introspectedColumn,
+            Set<FullyQualifiedJavaType> imports) {
         imports.add(new FullyQualifiedJavaType("javax.annotation.Generated"));
         String comment = "Source field: " + introspectedTable.getFullyQualifiedTable().toString() + "." + introspectedColumn.getActualColumnName();
         method.addAnnotation(this.getGeneratedAnnotation(comment));
     }
 
-    public void addFieldAnnotation(Field field, IntrospectedTable introspectedTable, Set<FullyQualifiedJavaType> imports) {
+    public void addFieldAnnotation(
+            Field field,
+            IntrospectedTable introspectedTable,
+            Set<FullyQualifiedJavaType> imports) {
         imports.add(new FullyQualifiedJavaType("javax.annotation.Generated"));
         String comment = "Source Table: " + introspectedTable.getFullyQualifiedTable().toString();
         field.addAnnotation(this.getGeneratedAnnotation(comment));
     }
 
-    public void addFieldAnnotation(Field field, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn, Set<FullyQualifiedJavaType> imports) {
+    public void addFieldAnnotation(
+            Field field,
+            IntrospectedTable introspectedTable,
+            IntrospectedColumn introspectedColumn,
+            Set<FullyQualifiedJavaType> imports) {
         imports.add(new FullyQualifiedJavaType("javax.annotation.Generated"));
         String comment = "Source field: " + introspectedTable.getFullyQualifiedTable().toString() + "." + introspectedColumn.getActualColumnName();
         field.addAnnotation(this.getGeneratedAnnotation(comment));
@@ -277,7 +298,7 @@ public class CustomCommentGenerator implements CommentGenerator {
                 String[] var8 = remarkLines;
                 int var9 = remarkLines.length;
 
-                for(int var10 = 0; var10 < var9; ++var10) {
+                for (int var10 = 0; var10 < var9; ++var10) {
                     String remarkLine = var8[var10];
                     field.addJavaDocLine(" *   " + remarkLine);
                 }
@@ -288,7 +309,10 @@ public class CustomCommentGenerator implements CommentGenerator {
 
     }
 
-    public void addClassAnnotation(InnerClass innerClass, IntrospectedTable introspectedTable, Set<FullyQualifiedJavaType> imports) {
+    public void addClassAnnotation(
+            InnerClass innerClass,
+            IntrospectedTable introspectedTable,
+            Set<FullyQualifiedJavaType> imports) {
         imports.add(new FullyQualifiedJavaType("javax.annotation.Generated"));
         String comment = "Source Table: " + introspectedTable.getFullyQualifiedTable().toString();
         innerClass.addAnnotation(this.getGeneratedAnnotation(comment));
