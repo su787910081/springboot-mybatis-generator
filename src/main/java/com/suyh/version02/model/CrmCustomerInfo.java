@@ -3,7 +3,6 @@ package com.suyh.version02.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
 public class CrmCustomerInfo implements Serializable {
     /**
      * Column: customer_id

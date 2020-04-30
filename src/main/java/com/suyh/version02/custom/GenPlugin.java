@@ -13,12 +13,11 @@ import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 import org.mybatis.generator.config.CommentGeneratorConfiguration;
 import org.mybatis.generator.config.Context;
+import org.mybatis.generator.internal.util.StringUtility;
 
 import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class GenPlugin extends PluginAdapter {
 
@@ -37,9 +36,11 @@ public class GenPlugin extends PluginAdapter {
         context.getJdbcConnectionConfiguration().addProperty("remarksReporting", "true");
     }
 
+    // validate方法调用，该方法一般用于验证传给参数的正确性，如果该方法返回false，则该插件结束执行
     @Override
     public boolean validate(List<String> list) {
-        return false;
+        // 这里需要打开
+        return true;
     }
 
     @Override
@@ -52,6 +53,46 @@ public class GenPlugin extends PluginAdapter {
         }
     }
 
+    /**
+     * suyh: 在类上面添加注解，以及添加注释.
+     * 这里添加的是一个 @Data 的注解
+     * @param topLevelClass
+     * @param introspectedTable
+     * @return
+     */
+    @Override
+    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        // 添加要 import 的实体对象
+        topLevelClass.addImportedType("lombok.Data");
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModel");
+        // 添加在类上面的注解
+        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addAnnotation("@ApiModel");
+
+        // 下面是添加类注释
+        topLevelClass.addJavaDocLine("/**");
+
+        String remarks = introspectedTable.getRemarks();
+        if (StringUtility.stringHasValue(remarks)) {
+            String[] remarkLines = remarks.split(System.getProperty("line.separator"));
+            for (String remarkLine : remarkLines) {
+                topLevelClass.addJavaDocLine(" * " + remarkLine);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(" * ").append(introspectedTable.getFullyQualifiedTable());
+        topLevelClass.addJavaDocLine(sb.toString());
+        sb.setLength(0);
+        sb.append(" * @author ").append(System.getProperties().getProperty("user.name"));
+        topLevelClass.addJavaDocLine(sb.toString());
+        sb.setLength(0);
+        sb.append(" * @date ");
+        sb.append(getDateString());
+        topLevelClass.addJavaDocLine(sb.toString());
+        topLevelClass.addJavaDocLine(" */");
+        return true;
+    }
 
     /**
      * 生成的Mapper接口
@@ -77,6 +118,13 @@ public class GenPlugin extends PluginAdapter {
         }
         // import实体类
         interfaze.addImportedType(entityType);
+
+        // suyh: 新添加，看类头上会不会有这个。
+        // 这里似乎添加到mapper 接口文件上面去了。
+        interfaze.addImportedType(new FullyQualifiedJavaType(
+                "org.apache.ibatis.annotations.Mapper"));
+        interfaze.addAnnotation("@Mapper");
+
         return true;
     }
 
@@ -285,6 +333,11 @@ public class GenPlugin extends PluginAdapter {
                 .append("\" index=\"index\" item=\"item\" open=\"(\" separator=\",\" close=\")\">#{item}</foreach>");
         delete.addElement(new TextElement(deleteStr.toString()));
         return delete;
+    }
+
+    protected String getDateString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(new Date());
     }
 
 }
