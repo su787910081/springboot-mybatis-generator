@@ -21,8 +21,9 @@
         platform_admin_user VARCHAR(30) NULL COMMENT '平台管理员帐号，非自有系统用户才会有。',
         created_date DATETIME NULL COMMENT '创建时间',
         settle_day INTEGER COMMENT '月结日，以0 表示自然月',
-        -- settle_money_id VARCHAR(36) NULL COMMENT '结算信息ID，映射到结算信息表',
-        using_status VARCHAR(3) NOT NULL COMMENT '启用状态【radio:1-是(启用),2-否(停用)】'
+        price DECIMAL(10, 2) NULL COMMENT '价格，10 位长度，两位小数位',
+        -- DECIMAL 是处理数字的，不指定则默认是小数位为0 的整数
+        using_status DECIMAL NOT NULL COMMENT '启用状态【radio:1-是(启用),2-否(停用)】'
     ) ENGINE = INNODB COMMENT '客户基本信息表结构：内部客户、供应商、承运商';
 
 

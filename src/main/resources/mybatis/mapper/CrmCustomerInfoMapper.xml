@@ -18,7 +18,8 @@
     <result column="platform_admin_user" jdbcType="VARCHAR" property="platformAdminUser" />
     <result column="created_date" jdbcType="TIMESTAMP" property="createdDate" />
     <result column="settle_day" jdbcType="INTEGER" property="settleDay" />
-    <result column="using_status" jdbcType="VARCHAR" property="usingStatus" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="using_status" jdbcType="DECIMAL" property="usingStatus" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--
@@ -37,12 +38,12 @@
       manager_name, manager_phone, inner_customer, 
       customer_type, address, us_plat_system, 
       platform_admin_user, created_date, settle_day, 
-      using_status)
+      price, using_status)
     values (#{customerId,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR}, #{shortName,jdbcType=VARCHAR}, 
       #{managerName,jdbcType=VARCHAR}, #{managerPhone,jdbcType=VARCHAR}, #{innerCustomer,jdbcType=VARCHAR}, 
       #{customerType,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{usPlatSystem,jdbcType=VARCHAR}, 
       #{platformAdminUser,jdbcType=VARCHAR}, #{createdDate,jdbcType=TIMESTAMP}, #{settleDay,jdbcType=INTEGER}, 
-      #{usingStatus,jdbcType=VARCHAR})
+      #{price,jdbcType=DECIMAL}, #{usingStatus,jdbcType=DECIMAL})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.suyh.model.CrmCustomerInfo">
     <!--
@@ -61,7 +62,8 @@
       platform_admin_user = #{platformAdminUser,jdbcType=VARCHAR},
       created_date = #{createdDate,jdbcType=TIMESTAMP},
       settle_day = #{settleDay,jdbcType=INTEGER},
-      using_status = #{usingStatus,jdbcType=VARCHAR}
+      price = #{price,jdbcType=DECIMAL},
+      using_status = #{usingStatus,jdbcType=DECIMAL}
     where customer_id = #{customerId,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -71,7 +73,7 @@
     -->
     select customer_id, full_name, short_name, manager_name, manager_phone, inner_customer, 
     customer_type, address, us_plat_system, platform_admin_user, created_date, settle_day, 
-    using_status
+    price, using_status
     from crm_customer_info
     where customer_id = #{customerId,jdbcType=VARCHAR}
   </select>
@@ -82,7 +84,7 @@
     -->
     select customer_id, full_name, short_name, manager_name, manager_phone, inner_customer, 
     customer_type, address, us_plat_system, platform_admin_user, created_date, settle_day, 
-    using_status
+    price, using_status
     from crm_customer_info
   </select>
 </mapper>

@@ -58,16 +58,17 @@
 
         <!-- 类型转换 -->
         <javaTypeResolver>
-            <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer true，
-            把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
+            <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer
+            true，把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
             <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
+            <!-- 测试了一下，这个地方填false 还是比较好的 -->
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
         <!-- 生成实体的位置 -->
         <javaModelGenerator targetPackage="com.suyh.model" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
-            <!-- 看样子是去掉前后的空白字符 -->
+            <!-- 在实体类的set 方法中直接trim() -->
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
