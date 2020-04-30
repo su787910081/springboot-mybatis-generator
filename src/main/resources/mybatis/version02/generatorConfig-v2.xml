@@ -13,9 +13,9 @@
     -->
 
     <!-- defaultModelType="flat" 大数据字段，不分表 -->
-    <context id="mysql" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple" >
-        <property name="beginningDelimiter" value="`" />
-        <property name="endingDelimiter" value="`" />
+    <context id="mysql" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
         <!-- 生成的 Java 文件的编码 -->
         <property name="javaFileEncoding" value="UTF-8"/>
         <!-- 格式化 Java 代码 -->
@@ -24,30 +24,35 @@
         <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
 
         <!-- 生成的entity，将implements Serializable -->
-        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
-        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <!-- 通过自定义插件类生成自定义注解和接口 -->
+        <plugin type="com.suyh.version02.custom.GenPlugin">
+            <property name="mappers" value="com.suyh.version02.custom.BaseMapper"/>
+        </plugin>
 
         <!-- 自定义注释生成器 -->
-        <commentGenerator type="com.suyh.version01.custom.CustomCommentGenerator">
-            <property name="author" value="Michael Chow"/>
-            <property name="dateFormat" value="yyyy-MM-dd"/>
+<!--        <commentGenerator type="com.suyh.version01.custom.CustomCommentGenerator">-->
+        <commentGenerator>
+            <!--            <property name="author" value="Michael Chow"/>-->
+            <!--            <property name="dateFormat" value="yyyy-MM-dd"/>-->
 
-            <property name="suppressAllComments" value="false"/><!-- 是否取消注释 -->
-            <property name="suppressDate" value="true" /> <!-- 是否生成注释代时间戳-->
+            <property name="suppressAllComments" value="true"/><!-- 是否取消注释 -->
+            <!--            <property name="suppressDate" value="true" /> &lt;!&ndash; 是否生成注释代时间戳&ndash;&gt;-->
             <!-- 添加表字段的注释，这个需要同时配置 suppressAllComments = false 默认就是false -->
-            <property name="addRemarkComments" value="true"/>
+            <!--            <property name="addRemarkComments" value="true"/>-->
 
         </commentGenerator>
 
         <!-- 配置数据库连接 -->
-<!--        spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver-->
-<!--        <jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
-<!--        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"-->
-<!--                        connectionURL="jdbc:mysql://docker:3306/suyh_db?characterEncoding=utf-8&amp;useSSL=false"-->
-<!--                        userId="root" password="root">-->
-<!--            &lt;!&ndash; 设置 useInformationSchema 属性为 true &ndash;&gt;-->
-<!--            <property name="useInformationSchema" value="true" />-->
-<!--        </jdbcConnection>-->
+        <!--        spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver-->
+        <!--        <jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
+        <!--        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"-->
+        <!--                        connectionURL="jdbc:mysql://docker:3306/suyh_db?characterEncoding=utf-8&amp;useSSL=false"-->
+        <!--                        userId="root" password="root">-->
+        <!--            &lt;!&ndash; 设置 useInformationSchema 属性为 true &ndash;&gt;-->
+        <!--            <property name="useInformationSchema" value="true" />-->
+        <!--        </jdbcConnection>-->
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
                         connectionURL="${spring.datasource.url}"
@@ -55,7 +60,7 @@
                         password="${spring.datasource.password}">
             <!-- 对实体类添加注释映射到表的注释 -->
             <!-- 设置 useInformationSchema 属性为 true -->
-            <property name="useInformationSchema" value="true" />
+            <property name="useInformationSchema" value="true"/>
         </jdbcConnection>
 
         <!-- 类型转换 -->
@@ -68,7 +73,7 @@
         </javaTypeResolver>
 
         <!-- 生成实体的位置 -->
-        <javaModelGenerator targetPackage="com.suyh.version01.model" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.suyh.version02.model" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <!-- 在实体类的set 方法中直接trim() -->
             <property name="trimStrings" value="true"/>
@@ -76,12 +81,13 @@
 
         <!-- 生成mapxml文件 -->
         <!-- 这个目录必须存在，若不存在则不会生成对应的文件 -->
-        <sqlMapGenerator targetPackage="version01/mapper" targetProject="src/main/resources/mybatis" >
-            <property name="enableSubPackages" value="false" />
+        <sqlMapGenerator targetPackage="version02/mapper" targetProject="src/main/resources/mybatis">
+            <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- 生成 Mapper XML 的位置 -->
-        <javaClientGenerator targetPackage="com.suyh.version01.mapper" type="XMLMAPPER" targetProject="src/main/java">
+        <javaClientGenerator targetPackage="com.suyh.version02.mapper"
+                             type="XMLMAPPER" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
@@ -95,48 +101,48 @@
                enableDeleteByExample="true"
                enableSelectByExample="true"
                selectByExampleQueryId="true">
-            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
-<!--        &lt;!&ndash; 客户/供应商结算信息表结构 &ndash;&gt;-->
-<!--        <table tableName="crm_settle_money_info"-->
-<!--               enableCountByExample="true"-->
-<!--               enableUpdateByExample="true"-->
-<!--               enableDeleteByExample="true"-->
-<!--               enableSelectByExample="true"-->
-<!--               selectByExampleQueryId="true">-->
-<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-<!--        </table>-->
+        <!--        &lt;!&ndash; 客户/供应商结算信息表结构 &ndash;&gt;-->
+        <!--        <table tableName="crm_settle_money_info"-->
+        <!--               enableCountByExample="true"-->
+        <!--               enableUpdateByExample="true"-->
+        <!--               enableDeleteByExample="true"-->
+        <!--               enableSelectByExample="true"-->
+        <!--               selectByExampleQueryId="true">-->
+        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
+        <!--        </table>-->
 
-<!--        &lt;!&ndash; 客户/供应商联系人信息表 &ndash;&gt;-->
-<!--        <table tableName="crm_contacts_info"-->
-<!--               enableCountByExample="true"-->
-<!--               enableUpdateByExample="true"-->
-<!--               enableDeleteByExample="true"-->
-<!--               enableSelectByExample="true"-->
-<!--               selectByExampleQueryId="true">-->
-<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-<!--        </table>-->
+        <!--        &lt;!&ndash; 客户/供应商联系人信息表 &ndash;&gt;-->
+        <!--        <table tableName="crm_contacts_info"-->
+        <!--               enableCountByExample="true"-->
+        <!--               enableUpdateByExample="true"-->
+        <!--               enableDeleteByExample="true"-->
+        <!--               enableSelectByExample="true"-->
+        <!--               selectByExampleQueryId="true">-->
+        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
+        <!--        </table>-->
 
-<!--        &lt;!&ndash; 收款信息(供应商) &ndash;&gt;-->
-<!--        <table tableName="crm_payee_info"-->
-<!--               enableCountByExample="true"-->
-<!--               enableUpdateByExample="true"-->
-<!--               enableDeleteByExample="true"-->
-<!--               enableSelectByExample="true"-->
-<!--               selectByExampleQueryId="true">-->
-<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-<!--        </table>-->
+        <!--        &lt;!&ndash; 收款信息(供应商) &ndash;&gt;-->
+        <!--        <table tableName="crm_payee_info"-->
+        <!--               enableCountByExample="true"-->
+        <!--               enableUpdateByExample="true"-->
+        <!--               enableDeleteByExample="true"-->
+        <!--               enableSelectByExample="true"-->
+        <!--               selectByExampleQueryId="true">-->
+        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
+        <!--        </table>-->
 
-<!--        &lt;!&ndash; 发票信息(客户) &ndash;&gt;-->
-<!--        <table tableName="crm_invoice_info"-->
-<!--               enableCountByExample="true"-->
-<!--               enableUpdateByExample="true"-->
-<!--               enableDeleteByExample="true"-->
-<!--               enableSelectByExample="true"-->
-<!--               selectByExampleQueryId="true">-->
-<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
-<!--        </table>-->
+        <!--        &lt;!&ndash; 发票信息(客户) &ndash;&gt;-->
+        <!--        <table tableName="crm_invoice_info"-->
+        <!--               enableCountByExample="true"-->
+        <!--               enableUpdateByExample="true"-->
+        <!--               enableDeleteByExample="true"-->
+        <!--               enableSelectByExample="true"-->
+        <!--               selectByExampleQueryId="true">-->
+        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true" />-->
+        <!--        </table>-->
 
     </context>
 
