@@ -1,5 +1,8 @@
 package com.suyh.version02.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -8,91 +11,107 @@ import java.util.Date;
  * 客户基本信息表结构：内部客户、供应商、承运商
  * CRM_CUSTOMER_INFO
  * @author suyh
- * @date 2020-05-01 15:23:49
+ * @date 2020-05-01 15:58:36
  */
+@ApiModel
 public class CrmCustomerInfo implements Serializable {
     /**
      * Column: CUSTOMER_ID
      *   主键：客户ID
      */
+    @ApiModelProperty(value = "主键：客户ID")
     private String customerId;
 
     /**
      * Column: FULL_NAME
      *   客户全称
      */
+    @ApiModelProperty(value = "客户全称")
     private String fullName;
 
     /**
      * Column: SHORT_NAME
      *   客户简称
      */
+    @ApiModelProperty(value = "客户简称")
     private String shortName;
 
     /**
      * Column: MANAGER_NAME
      *   负责人
      */
+    @ApiModelProperty(value = "负责人")
     private String managerName;
 
     /**
      * Column: MANAGER_PHONE
      *   联系电话
      */
+    @ApiModelProperty(value = "联系电话")
     private String managerPhone;
 
     /**
      * Column: INNER_CUSTOMER
      *   是否内部用户【radio:Y/N】
      */
+    @ApiModelProperty(value = "是否内部用户【radio:Y/N】")
     private String innerCustomer;
 
     /**
      * Column: CUSTOMER_TYPE
      *   客户类型【select:1-内部客户,2-供应商,3-承运商】
      */
+    @ApiModelProperty(value = "客户类型【select:1-内部客户,2-供应商,3-承运商】")
     private String customerType;
 
     /**
      * Column: ADDRESS
      *   联系地址
      */
+    @ApiModelProperty(value = "联系地址")
     private String address;
 
     /**
      * Column: US_PLAT_SYSTEM
      *   是否使用平台系统【radio:1-是,2-否】
      */
+    @ApiModelProperty(value = "是否使用平台系统【radio:1-是,2-否】")
     private String usPlatSystem;
 
     /**
      * Column: PLATFORM_ADMIN_USER
      *   平台管理员帐号，非自有系统用户才会有。
      */
+    @ApiModelProperty(value = "平台管理员帐号，非自有系统用户才会有。")
     private String platformAdminUser;
 
     /**
      * Column: CREATED_DATE
      *   创建时间
      */
+    @ApiModelProperty(value = "创建时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createdDate;
 
     /**
      * Column: SETTLE_DAY
      *   月结日，以0 表示自然月
      */
+    @ApiModelProperty(value = "月结日，以0 表示自然月")
     private BigDecimal settleDay;
 
     /**
      * Column: PRICE
      *   价格，10 位长度，两位小数位
      */
+    @ApiModelProperty(value = "价格，10 位长度，两位小数位")
     private BigDecimal price;
 
     /**
      * Column: USING_STATUS
      *   启用状态【radio:1-是(启用),2-否(停用)】
      */
+    @ApiModelProperty(value = "启用状态【radio:1-是(启用),2-否(停用)】")
     private BigDecimal usingStatus;
 
     private static final long serialVersionUID = 1L;

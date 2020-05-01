@@ -72,10 +72,14 @@ public class GenPlugin extends PluginAdapter {
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
 //        // 添加要 import 的实体对象
 //        topLevelClass.addImportedType("lombok.Data");
-//        topLevelClass.addImportedType("io.swagger.annotations.ApiModel");
+        // 添加swagger 注解实体类
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModel");
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty");
+        // 添加json 格式化注解类
+        topLevelClass.addImportedType("com.fasterxml.jackson.annotation.JsonFormat");
 //        // 添加在类上面的注解
 //        topLevelClass.addAnnotation("@Data");
-//        topLevelClass.addAnnotation("@ApiModel");
+        topLevelClass.addAnnotation("@ApiModel");
 
         // 下面是添加类注释
         topLevelClass.addJavaDocLine("/**");
@@ -124,7 +128,17 @@ public class GenPlugin extends PluginAdapter {
 
         field.addAnnotation(sbAnnotation.toString());
 
+        FullyQualifiedJavaType type = field.getType();
+        if (type.equals(FullyQualifiedJavaType.getDateInstance())) {
+            // 日期类我们要添加时间的序列化
+            System.out.println(field.getName());
+            // import com.fasterxml.jackson.annotation.JsonFormat;
+            // @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8");
+            String dateJsonFormat = "@JsonFormat(pattern=\"yyyy-MM-dd HH:mm:ss\",timezone=\"GMT+8\")";
+            field.addAnnotation(dateJsonFormat);
 
+
+        }
 
 
         return true;
