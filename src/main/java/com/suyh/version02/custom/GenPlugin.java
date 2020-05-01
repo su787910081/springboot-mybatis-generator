@@ -70,12 +70,12 @@ public class GenPlugin extends PluginAdapter {
      */
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        // 添加要 import 的实体对象
-        topLevelClass.addImportedType("lombok.Data");
-        topLevelClass.addImportedType("io.swagger.annotations.ApiModel");
-        // 添加在类上面的注解
-        topLevelClass.addAnnotation("@Data");
-        topLevelClass.addAnnotation("@ApiModel");
+//        // 添加要 import 的实体对象
+//        topLevelClass.addImportedType("lombok.Data");
+//        topLevelClass.addImportedType("io.swagger.annotations.ApiModel");
+//        // 添加在类上面的注解
+//        topLevelClass.addAnnotation("@Data");
+//        topLevelClass.addAnnotation("@ApiModel");
 
         // 下面是添加类注释
         topLevelClass.addJavaDocLine("/**");
@@ -116,9 +116,8 @@ public class GenPlugin extends PluginAdapter {
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
                                        IntrospectedTable introspectedTable, ModelClassType modelClassType) {
 
-        String a = "@ApiModelProperty(value = \"联系人ID\")";
-        field.addAnnotation(a);
-
+//        String a = "@ApiModelProperty(value = \"联系人ID\")";
+//        field.addAnnotation(a);
 
         return true;
     }
@@ -150,9 +149,9 @@ public class GenPlugin extends PluginAdapter {
 
         // suyh: 新添加，看类头上会不会有这个。
         // 这里似乎添加到mapper 接口文件上面去了。
-        interfaze.addImportedType(new FullyQualifiedJavaType(
-                "org.apache.ibatis.annotations.Mapper"));
-        interfaze.addAnnotation("@Mapper");
+//        interfaze.addImportedType(new FullyQualifiedJavaType(
+//                "org.apache.ibatis.annotations.Mapper"));
+//        interfaze.addAnnotation("@Mapper");
 
         return true;
     }

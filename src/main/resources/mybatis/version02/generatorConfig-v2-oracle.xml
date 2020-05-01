@@ -52,6 +52,8 @@
             <!-- 对实体类添加注释映射到表的注释 -->
             <!-- 设置 useInformationSchema 属性为 true -->
             <property name="useInformationSchema" value="true"/>
+            <!-- 针对oracle数据库，指定数据库为ORACLE 时如果没有这个配置，则注释拿不到的。 -->
+            <property name="remarksReporting" value="true"></property>
         </jdbcConnection>
 
         <!-- 类型转换 -->

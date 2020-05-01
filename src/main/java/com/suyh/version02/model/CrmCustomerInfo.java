@@ -3,97 +3,104 @@ package com.suyh.version02.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+/**
+ * 客户基本信息表结构：内部客户、供应商、承运商
+ * CRM_CUSTOMER_INFO
+ * @author suyh
+ * @date 2020-05-01 15:23:49
+ */
 public class CrmCustomerInfo implements Serializable {
     /**
-     * Column: customer_id
+     * Column: CUSTOMER_ID
      *   主键：客户ID
      */
     private String customerId;
 
     /**
-     * Column: full_name
+     * Column: FULL_NAME
      *   客户全称
      */
     private String fullName;
 
     /**
-     * Column: short_name
+     * Column: SHORT_NAME
      *   客户简称
      */
     private String shortName;
 
     /**
-     * Column: manager_name
+     * Column: MANAGER_NAME
      *   负责人
      */
     private String managerName;
 
     /**
-     * Column: manager_phone
+     * Column: MANAGER_PHONE
      *   联系电话
      */
     private String managerPhone;
 
     /**
-     * Column: inner_customer
-     *   是否内部用户(这个字段似乎有些多余了)【radio:1-是,2-否】
+     * Column: INNER_CUSTOMER
+     *   是否内部用户【radio:Y/N】
      */
     private String innerCustomer;
 
     /**
-     * Column: customer_type
+     * Column: CUSTOMER_TYPE
      *   客户类型【select:1-内部客户,2-供应商,3-承运商】
      */
     private String customerType;
 
     /**
-     * Column: address
+     * Column: ADDRESS
      *   联系地址
      */
     private String address;
 
     /**
-     * Column: us_plat_system
-     *   是否使用平台系统(当有自有系统时则可不使用平台系统)【radio:1-是,2-否】
+     * Column: US_PLAT_SYSTEM
+     *   是否使用平台系统【radio:1-是,2-否】
      */
     private String usPlatSystem;
 
     /**
-     * Column: platform_admin_user
+     * Column: PLATFORM_ADMIN_USER
      *   平台管理员帐号，非自有系统用户才会有。
      */
     private String platformAdminUser;
 
     /**
-     * Column: created_date
+     * Column: CREATED_DATE
      *   创建时间
      */
     private Date createdDate;
 
     /**
-     * Column: settle_day
+     * Column: SETTLE_DAY
      *   月结日，以0 表示自然月
      */
-    private Integer settleDay;
+    private BigDecimal settleDay;
 
     /**
-     * Column: price
+     * Column: PRICE
      *   价格，10 位长度，两位小数位
      */
     private BigDecimal price;
 
     /**
-     * Column: using_status
+     * Column: USING_STATUS
      *   启用状态【radio:1-是(启用),2-否(停用)】
      */
-    private Long usingStatus;
+    private BigDecimal usingStatus;
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 获取主键：客户ID
      *
-     * @return customer_id - 主键：客户ID
+     * @return CUSTOMER_ID - 主键：客户ID
      */
     public String getCustomerId() {
         return customerId;
@@ -111,7 +118,7 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取客户全称
      *
-     * @return full_name - 客户全称
+     * @return FULL_NAME - 客户全称
      */
     public String getFullName() {
         return fullName;
@@ -129,7 +136,7 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取客户简称
      *
-     * @return short_name - 客户简称
+     * @return SHORT_NAME - 客户简称
      */
     public String getShortName() {
         return shortName;
@@ -147,7 +154,7 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取负责人
      *
-     * @return manager_name - 负责人
+     * @return MANAGER_NAME - 负责人
      */
     public String getManagerName() {
         return managerName;
@@ -165,7 +172,7 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取联系电话
      *
-     * @return manager_phone - 联系电话
+     * @return MANAGER_PHONE - 联系电话
      */
     public String getManagerPhone() {
         return managerPhone;
@@ -181,18 +188,18 @@ public class CrmCustomerInfo implements Serializable {
     }
 
     /**
-     * 获取是否内部用户(这个字段似乎有些多余了)【radio:1-是,2-否】
+     * 获取是否内部用户【radio:Y/N】
      *
-     * @return inner_customer - 是否内部用户(这个字段似乎有些多余了)【radio:1-是,2-否】
+     * @return INNER_CUSTOMER - 是否内部用户【radio:Y/N】
      */
     public String getInnerCustomer() {
         return innerCustomer;
     }
 
     /**
-     * 设置是否内部用户(这个字段似乎有些多余了)【radio:1-是,2-否】
+     * 设置是否内部用户【radio:Y/N】
      *
-     * @param innerCustomer 是否内部用户(这个字段似乎有些多余了)【radio:1-是,2-否】
+     * @param innerCustomer 是否内部用户【radio:Y/N】
      */
     public void setInnerCustomer(String innerCustomer) {
         this.innerCustomer = innerCustomer == null ? null : innerCustomer.trim();
@@ -201,7 +208,7 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取客户类型【select:1-内部客户,2-供应商,3-承运商】
      *
-     * @return customer_type - 客户类型【select:1-内部客户,2-供应商,3-承运商】
+     * @return CUSTOMER_TYPE - 客户类型【select:1-内部客户,2-供应商,3-承运商】
      */
     public String getCustomerType() {
         return customerType;
@@ -219,7 +226,7 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取联系地址
      *
-     * @return address - 联系地址
+     * @return ADDRESS - 联系地址
      */
     public String getAddress() {
         return address;
@@ -235,18 +242,18 @@ public class CrmCustomerInfo implements Serializable {
     }
 
     /**
-     * 获取是否使用平台系统(当有自有系统时则可不使用平台系统)【radio:1-是,2-否】
+     * 获取是否使用平台系统【radio:1-是,2-否】
      *
-     * @return us_plat_system - 是否使用平台系统(当有自有系统时则可不使用平台系统)【radio:1-是,2-否】
+     * @return US_PLAT_SYSTEM - 是否使用平台系统【radio:1-是,2-否】
      */
     public String getUsPlatSystem() {
         return usPlatSystem;
     }
 
     /**
-     * 设置是否使用平台系统(当有自有系统时则可不使用平台系统)【radio:1-是,2-否】
+     * 设置是否使用平台系统【radio:1-是,2-否】
      *
-     * @param usPlatSystem 是否使用平台系统(当有自有系统时则可不使用平台系统)【radio:1-是,2-否】
+     * @param usPlatSystem 是否使用平台系统【radio:1-是,2-否】
      */
     public void setUsPlatSystem(String usPlatSystem) {
         this.usPlatSystem = usPlatSystem == null ? null : usPlatSystem.trim();
@@ -255,7 +262,7 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取平台管理员帐号，非自有系统用户才会有。
      *
-     * @return platform_admin_user - 平台管理员帐号，非自有系统用户才会有。
+     * @return PLATFORM_ADMIN_USER - 平台管理员帐号，非自有系统用户才会有。
      */
     public String getPlatformAdminUser() {
         return platformAdminUser;
@@ -273,7 +280,7 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取创建时间
      *
-     * @return created_date - 创建时间
+     * @return CREATED_DATE - 创建时间
      */
     public Date getCreatedDate() {
         return createdDate;
@@ -291,9 +298,9 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取月结日，以0 表示自然月
      *
-     * @return settle_day - 月结日，以0 表示自然月
+     * @return SETTLE_DAY - 月结日，以0 表示自然月
      */
-    public Integer getSettleDay() {
+    public BigDecimal getSettleDay() {
         return settleDay;
     }
 
@@ -302,14 +309,14 @@ public class CrmCustomerInfo implements Serializable {
      *
      * @param settleDay 月结日，以0 表示自然月
      */
-    public void setSettleDay(Integer settleDay) {
+    public void setSettleDay(BigDecimal settleDay) {
         this.settleDay = settleDay;
     }
 
     /**
      * 获取价格，10 位长度，两位小数位
      *
-     * @return price - 价格，10 位长度，两位小数位
+     * @return PRICE - 价格，10 位长度，两位小数位
      */
     public BigDecimal getPrice() {
         return price;
@@ -327,9 +334,9 @@ public class CrmCustomerInfo implements Serializable {
     /**
      * 获取启用状态【radio:1-是(启用),2-否(停用)】
      *
-     * @return using_status - 启用状态【radio:1-是(启用),2-否(停用)】
+     * @return USING_STATUS - 启用状态【radio:1-是(启用),2-否(停用)】
      */
-    public Long getUsingStatus() {
+    public BigDecimal getUsingStatus() {
         return usingStatus;
     }
 
@@ -338,7 +345,7 @@ public class CrmCustomerInfo implements Serializable {
      *
      * @param usingStatus 启用状态【radio:1-是(启用),2-否(停用)】
      */
-    public void setUsingStatus(Long usingStatus) {
+    public void setUsingStatus(BigDecimal usingStatus) {
         this.usingStatus = usingStatus;
     }
 
