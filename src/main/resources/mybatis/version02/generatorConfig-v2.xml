@@ -13,7 +13,7 @@
     -->
 
     <!-- defaultModelType="flat" 大数据字段，不分表 -->
-    <context id="mysql" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple">
+    <context id="mysql-id" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple">
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
         <!-- 生成的 Java 文件的编码 -->
@@ -103,7 +103,7 @@
                enableSelectByExample="true"
                selectByExampleQueryId="true">
             <!-- 主键生成方式 -->
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
         </table>
 
         <!--        &lt;!&ndash; 客户/供应商结算信息表结构 &ndash;&gt;-->

@@ -13,7 +13,7 @@
     -->
 
     <!-- defaultModelType="flat" 大数据字段，不分表 -->
-    <context id="oracle" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple">
+    <context id="oracle-test" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple">
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
         <!-- 生成的 Java 文件的编码 -->

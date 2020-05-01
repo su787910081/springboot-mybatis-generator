@@ -99,6 +99,9 @@ public class GenPlugin extends PluginAdapter {
      */
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        // 表注释
+        String remarks = introspectedTable.getRemarks();
+
         // 添加要 import 的实体对象
         for (AnnotationEnum ann : annotations) {
             for (String im : ann.getImportEntitys()) {
@@ -107,19 +110,20 @@ public class GenPlugin extends PluginAdapter {
         }
         // 类上面要添加的注解
         if (annotations.contains(AnnotationEnum.SWAGGER)) {
-            topLevelClass.addAnnotation("@ApiModel");
+            topLevelClass.addAnnotation("@ApiModel(value = \"" +remarks + "\")");
         }
 
         // 下面是添加类注释
         topLevelClass.addJavaDocLine("/**");
 
-        String remarks = introspectedTable.getRemarks();
+
         if (StringUtility.stringHasValue(remarks)) {
             String[] remarkLines = remarks.split(System.getProperty("line.separator"));
             for (String remarkLine : remarkLines) {
                 topLevelClass.addJavaDocLine(" * " + remarkLine);
             }
         }
+
 
         StringBuilder sb = new StringBuilder();
         topLevelClass.addJavaDocLine(" * ");
