@@ -12,7 +12,7 @@ import java.util.List;
 public class GenMain {
     public static void main(String[] args) {
         //读取文件
-        String filePath = "/mybatis/version02/generatorConfig-v2.xml";
+        String filePath = "/mybatis/version02/generatorConfig-v2-oracle.xml";
         String generatorConfig = GenMain.class.getResource(filePath).getFile();
         File configFile = new File(generatorConfig);
         List<String> warnings = new ArrayList<String>();
