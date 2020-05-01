@@ -116,8 +116,16 @@ public class GenPlugin extends PluginAdapter {
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
                                        IntrospectedTable introspectedTable, ModelClassType modelClassType) {
 
-//        String a = "@ApiModelProperty(value = \"联系人ID\")";
-//        field.addAnnotation(a);
+        String remarks = introspectedColumn.getRemarks();
+        StringBuilder sbAnnotation = new StringBuilder();
+        sbAnnotation.append("@ApiModelProperty(");
+        sbAnnotation.append("value = ").append('"').append(remarks).append('"');
+        sbAnnotation.append(")");
+
+        field.addAnnotation(sbAnnotation.toString());
+
+
+
 
         return true;
     }
