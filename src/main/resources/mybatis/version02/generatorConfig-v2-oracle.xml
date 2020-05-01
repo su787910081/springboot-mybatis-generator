@@ -33,18 +33,23 @@
             <property name="author" value="suyh"/>
             <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
 
+            <!-- 自定义配置属性  -->
+            <property name="swagger" value="true"/>
+            <property name="format_date" value="true"/>
+            <property name="dateFormat" value="yyyy-MM-dd"/>
+            <property name="author" value="suyh"/>
         </plugin>
 
-        <commentGenerator>
-            <property name="author" value="suyh"/>
-            <property name="dateFormat" value="yyyy-MM-dd"/>
+<!--        <commentGenerator>-->
+<!--            <property name="author" value="suyh"/>-->
+<!--            <property name="dateFormat" value="yyyy-MM-dd"/>-->
 
-            <property name="suppressAllComments" value="false"/><!-- 是否取消注释 -->
-            <property name="suppressDate" value="true"/> <!-- 是否生成注释代时间戳-->
-            <!-- 添加表字段的注释，这个需要同时配置 suppressAllComments = false 默认就是false -->
-            <property name="addRemarkComments" value="false"/>
+<!--            <property name="suppressAllComments" value="false"/>&lt;!&ndash; 是否取消注释 &ndash;&gt;-->
+<!--            <property name="suppressDate" value="true"/> &lt;!&ndash; 是否生成注释代时间戳&ndash;&gt;-->
+<!--            &lt;!&ndash; 添加表字段的注释，这个需要同时配置 suppressAllComments = false 默认就是false &ndash;&gt;-->
+<!--            <property name="addRemarkComments" value="false"/>-->
 
-        </commentGenerator>
+<!--        </commentGenerator>-->
 
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
@@ -56,6 +61,8 @@
             <property name="useInformationSchema" value="true"/>
             <!-- 针对oracle数据库，指定数据库为ORACLE 时如果没有这个配置，则注释拿不到的。 -->
             <property name="remarksReporting" value="true"></property>
+
+
         </jdbcConnection>
 
         <!-- 类型转换 -->

@@ -15,7 +15,6 @@ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 import org.mybatis.generator.config.CommentGeneratorConfiguration;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.internal.util.StringUtility;
-import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -23,19 +22,30 @@ import java.util.*;
 
 public class GenPlugin extends PluginAdapter {
 
-    // 注释生成器
-    private CommentGeneratorConfiguration commentCfg;
-    private Set<String> mappers = new HashSet<String>();
+    // 所有支持的注解，这个注解在配置文件中使用。要与这些字符串做比较。
+    private final static String ANN_SWAGGER = "swagger";
+    private final static String ANN_DATE = "format_date";
+    private static final String PRO_AUTHOR = "author";
+    private static final String PRO_DATE_FORMAT = "dateFormat";
+    private static final String PRO_MAPPERS = "mappers";
 
-    private String dateFormat = "yyyy-MM-dd HH:mm:ss";
+    private final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    private final Set<String> mappers = new HashSet<>();
+
+    private String dateFormat = "";
     private String author = "";
+
+    // 配置了，需要添加的注解
+    private final Set<AnnotationEnum> annotations = new HashSet<>();
 
 
     @Override
     public void setContext(Context context) {
         super.setContext(context);
         // 设置自定义的注释生成器: GenCommentGenerator
-        commentCfg = new CommentGeneratorConfiguration();
+        // 注释生成器
+        CommentGeneratorConfiguration commentCfg = new CommentGeneratorConfiguration();
         commentCfg.setConfigurationType(GenCommentGenerator.class.getCanonicalName());
         context.setCommentGeneratorConfiguration(commentCfg);
     }
@@ -55,26 +65,26 @@ public class GenPlugin extends PluginAdapter {
      */
     @Override
     public void setProperties(Properties properties) {
-        System.out.println(properties);
-
         super.setProperties(properties);
-        String mappers = this.properties.getProperty("mappers");
+
+        String mappers = this.properties.getProperty(PRO_MAPPERS);
         for (String mapper : mappers.split(",")) {
             this.mappers.add(mapper);
         }
-        String temp = null;
-        temp = properties.getProperty("author");
-        if (StringUtils.isEmpty(temp)) {
-            // 没有配置，则取本机系统中的用户名
-            temp = System.getProperties().getProperty("user.name");
-        }
-        if (!StringUtils.isEmpty(temp)) {
-            author = temp;
-        }
 
-        temp = properties.getProperty("dateFormat");
-        if (!StringUtils.isEmpty(temp)) {
-            dateFormat = temp;
+        String defaultValue = System.getProperties().getProperty("user.name");
+        author = (String) properties.getOrDefault(PRO_AUTHOR, defaultValue);
+        dateFormat = (String) properties.getOrDefault(PRO_DATE_FORMAT, DEFAULT_DATE_FORMAT);
+
+        // 初始化支持的所有注解
+        String bEnable = null;
+        bEnable = (String) properties.getOrDefault(ANN_DATE, "false");
+        if ("true".equals(bEnable)) {
+            annotations.add(AnnotationEnum.JSON_DATE);
+        }
+        bEnable = (String) properties.getOrDefault(ANN_SWAGGER, "false");
+        if ("true".equals(bEnable)) {
+            annotations.add(AnnotationEnum.SWAGGER);
         }
     }
 
@@ -89,16 +99,16 @@ public class GenPlugin extends PluginAdapter {
      */
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-//        // 添加要 import 的实体对象
-//        topLevelClass.addImportedType("lombok.Data");
-        // 添加swagger 注解实体类
-        topLevelClass.addImportedType("io.swagger.annotations.ApiModel");
-        topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty");
-        // 添加json 格式化注解类
-        topLevelClass.addImportedType("com.fasterxml.jackson.annotation.JsonFormat");
-//        // 添加在类上面的注解
-//        topLevelClass.addAnnotation("@Data");
-        topLevelClass.addAnnotation("@ApiModel");
+        // 添加要 import 的实体对象
+        for (AnnotationEnum ann : annotations) {
+            for (String im : ann.getImportEntitys()) {
+                topLevelClass.addImportedType(im);
+            }
+        }
+        // 类上面要添加的注解
+        if (annotations.contains(AnnotationEnum.SWAGGER)) {
+            topLevelClass.addAnnotation("@ApiModel");
+        }
 
         // 下面是添加类注释
         topLevelClass.addJavaDocLine("/**");
@@ -141,31 +151,37 @@ public class GenPlugin extends PluginAdapter {
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
                                        IntrospectedTable introspectedTable, ModelClassType modelClassType) {
 
+        // 字段注释
+        String remarks = introspectedColumn.getRemarks();
+        if (remarks == null) {
+            remarks = "";
+        }
 
-        // 日期处理
+        // 日期处理，添加注释与注解
         String dateRemark = null;
         FullyQualifiedJavaType type = field.getType();
         if (type.equals(FullyQualifiedJavaType.getDateInstance())) {
-            // 日期类我们要添加时间的序列化
-            System.out.println(field.getName());
-            String dateJsonFormat = "@JsonFormat(pattern=\"" + dateFormat
-                    + "\",timezone=\"GMT+8\")";
-            field.addAnnotation(dateJsonFormat);
-            dateRemark = "【格式：" + dateFormat + "】";
+
+            if (annotations.contains(AnnotationEnum.JSON_DATE)) {
+                // 没有注解，这个格式也没用。
+                dateRemark = "【格式：" + dateFormat + "】";
+
+                // 日期类我们要添加时间的序列化注解
+                String dateJsonFormat = "@JsonFormat(pattern = \""
+                        + dateFormat + "\", timezone = \"GMT+8\")";
+                field.addAnnotation(dateJsonFormat);
+            }
         }
 
-        String remarks = introspectedColumn.getRemarks();
-        StringBuilder sbAnnotation = new StringBuilder();
-        sbAnnotation.append("@ApiModelProperty(");
-        sbAnnotation.append("value = ").append('"').append(remarks);
-        if (!StringUtils.isEmpty(dateRemark)) {
-            sbAnnotation.append(dateRemark);
+        if (annotations.contains(AnnotationEnum.SWAGGER)) {
+            StringBuilder sbAnnotation = new StringBuilder();
+            sbAnnotation.append("@ApiModelProperty(");
+            sbAnnotation.append("value = ").append('"').append(remarks);
+            sbAnnotation.append(dateRemark == null ? "" : dateRemark);
+            sbAnnotation.append('"').append(")");
+
+            field.addAnnotation(sbAnnotation.toString());
         }
-        sbAnnotation.append('"');
-        sbAnnotation.append(")");
-
-        field.addAnnotation(sbAnnotation.toString());
-
 
         return true;
     }
@@ -412,7 +428,7 @@ public class GenPlugin extends PluginAdapter {
     }
 
     protected String getDateString() {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
         return sdf.format(new Date());
     }
 
