@@ -38,8 +38,6 @@ public class GenPlugin extends PluginAdapter {
         commentCfg = new CommentGeneratorConfiguration();
         commentCfg.setConfigurationType(GenCommentGenerator.class.getCanonicalName());
         context.setCommentGeneratorConfiguration(commentCfg);
-        // 支持oracle获取注释#114
-        context.getJdbcConnectionConfiguration().addProperty("remarksReporting", "true");
     }
 
     // validate方法调用，该方法一般用于验证传给参数的正确性，如果该方法返回false，则该插件结束执行

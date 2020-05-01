@@ -12,7 +12,7 @@ import java.util.Date;
  * 
  * @table: CRM_CUSTOMER_INFO
  * @author: suyh
- * @date: 2020-05-01 16:27:50
+ * @date: 2020-05-01 16:30:08
  */
 @ApiModel
 public class CrmCustomerInfo implements Serializable {
