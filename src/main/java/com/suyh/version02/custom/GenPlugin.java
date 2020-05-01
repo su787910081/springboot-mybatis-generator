@@ -15,6 +15,7 @@ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 import org.mybatis.generator.config.CommentGeneratorConfiguration;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.internal.util.StringUtility;
+import org.springframework.util.StringUtils;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -26,7 +27,9 @@ public class GenPlugin extends PluginAdapter {
     private CommentGeneratorConfiguration commentCfg;
     private Set<String> mappers = new HashSet<String>();
 
-    String dateFormat = "yyyy-MM-dd HH:mm:ss";
+    private String dateFormat = "yyyy-MM-dd HH:mm:ss";
+    private String author = "";
+
 
     @Override
     public void setContext(Context context) {
@@ -54,11 +57,26 @@ public class GenPlugin extends PluginAdapter {
      */
     @Override
     public void setProperties(Properties properties) {
+        System.out.println(properties);
 
         super.setProperties(properties);
         String mappers = this.properties.getProperty("mappers");
         for (String mapper : mappers.split(",")) {
             this.mappers.add(mapper);
+        }
+        String temp = null;
+        temp = properties.getProperty("author");
+        if (StringUtils.isEmpty(temp)) {
+            // 没有配置，则取本机系统中的用户名
+            temp = System.getProperties().getProperty("user.name");
+        }
+        if (!StringUtils.isEmpty(temp)) {
+            author = temp;
+        }
+
+        temp = properties.getProperty("dateFormat");
+        if (!StringUtils.isEmpty(temp)) {
+            dateFormat = temp;
         }
     }
 
@@ -66,6 +84,7 @@ public class GenPlugin extends PluginAdapter {
      * suyh: 在类上面添加注解，以及添加注释.
      * 这里添加的是一个 @Data 的注解
      * 这里应该是要将所有需要 import 的都在这里做处理。
+     *
      * @param topLevelClass
      * @param introspectedTable
      * @return
@@ -95,11 +114,11 @@ public class GenPlugin extends PluginAdapter {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(" * ");
+        topLevelClass.addJavaDocLine(" * ");
         sb.append(" * @table: ").append(introspectedTable.getFullyQualifiedTable());
         topLevelClass.addJavaDocLine(sb.toString());
         sb.setLength(0);
-        sb.append(" * @author: ").append(System.getProperties().getProperty("user.name"));
+        sb.append(" * @author: ").append(author);
         topLevelClass.addJavaDocLine(sb.toString());
         sb.setLength(0);
         sb.append(" * @date: ");
@@ -112,6 +131,7 @@ public class GenPlugin extends PluginAdapter {
     /**
      * 字段处理，在这里可以添加字段的注解，注释等
      * 但是需要 validate() 返回true
+     *
      * @param field
      * @param topLevelClass
      * @param introspectedColumn

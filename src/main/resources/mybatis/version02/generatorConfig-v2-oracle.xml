@@ -30,17 +30,19 @@
         <!-- 自定义插件生成，可以参考博客：https://blog.csdn.net/u011781521/article/details/78695396 -->
         <plugin type="com.suyh.version02.custom.GenPlugin">
             <property name="mappers" value="com.suyh.version02.custom.BaseMapper"/>
+            <property name="author" value="suyh"/>
+            <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
+
         </plugin>
 
-        <!-- 自定义注释生成器 -->
         <commentGenerator>
             <property name="author" value="suyh"/>
             <property name="dateFormat" value="yyyy-MM-dd"/>
 
-            <property name="suppressAllComments" value="true"/><!-- 是否取消注释 -->
+            <property name="suppressAllComments" value="false"/><!-- 是否取消注释 -->
             <property name="suppressDate" value="true"/> <!-- 是否生成注释代时间戳-->
             <!-- 添加表字段的注释，这个需要同时配置 suppressAllComments = false 默认就是false -->
-            <property name="addRemarkComments" value="true"/>
+            <property name="addRemarkComments" value="false"/>
 
         </commentGenerator>
 

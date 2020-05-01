@@ -9,9 +9,10 @@ import java.util.Date;
 
 /**
  * 客户基本信息表结构：内部客户、供应商、承运商
- *  * @table: CRM_CUSTOMER_INFO
+ * 
+ * @table: CRM_CUSTOMER_INFO
  * @author: suyh
- * @date: 2020-05-01 16:09:23
+ * @date: 2020-05-01 16:27:50
  */
 @ApiModel
 public class CrmCustomerInfo implements Serializable {
