@@ -26,6 +26,8 @@ public class GenPlugin extends PluginAdapter {
     private CommentGeneratorConfiguration commentCfg;
     private Set<String> mappers = new HashSet<String>();
 
+    String dateFormat = "yyyy-MM-dd HH:mm:ss";
+
     @Override
     public void setContext(Context context) {
         super.setContext(context);
@@ -93,13 +95,14 @@ public class GenPlugin extends PluginAdapter {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(" * ").append(introspectedTable.getFullyQualifiedTable());
+        sb.append(" * ");
+        sb.append(" * @table: ").append(introspectedTable.getFullyQualifiedTable());
         topLevelClass.addJavaDocLine(sb.toString());
         sb.setLength(0);
-        sb.append(" * @author ").append(System.getProperties().getProperty("user.name"));
+        sb.append(" * @author: ").append(System.getProperties().getProperty("user.name"));
         topLevelClass.addJavaDocLine(sb.toString());
         sb.setLength(0);
-        sb.append(" * @date ");
+        sb.append(" * @date: ");
         sb.append(getDateString());
         topLevelClass.addJavaDocLine(sb.toString());
         topLevelClass.addJavaDocLine(" */");
@@ -134,10 +137,9 @@ public class GenPlugin extends PluginAdapter {
             System.out.println(field.getName());
             // import com.fasterxml.jackson.annotation.JsonFormat;
             // @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8");
-            String dateJsonFormat = "@JsonFormat(pattern=\"yyyy-MM-dd HH:mm:ss\",timezone=\"GMT+8\")";
+            String dateJsonFormat = "@JsonFormat(pattern=\"" + dateFormat
+                    + "\",timezone=\"GMT+8\")";
             field.addAnnotation(dateJsonFormat);
-
-
         }
 
 
@@ -386,7 +388,7 @@ public class GenPlugin extends PluginAdapter {
     }
 
     protected String getDateString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         return sdf.format(new Date());
     }
 
