@@ -141,24 +141,30 @@ public class GenPlugin extends PluginAdapter {
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
                                        IntrospectedTable introspectedTable, ModelClassType modelClassType) {
 
-        String remarks = introspectedColumn.getRemarks();
-        StringBuilder sbAnnotation = new StringBuilder();
-        sbAnnotation.append("@ApiModelProperty(");
-        sbAnnotation.append("value = ").append('"').append(remarks).append('"');
-        sbAnnotation.append(")");
 
-        field.addAnnotation(sbAnnotation.toString());
-
+        // 日期处理
+        String dateRemark = null;
         FullyQualifiedJavaType type = field.getType();
         if (type.equals(FullyQualifiedJavaType.getDateInstance())) {
             // 日期类我们要添加时间的序列化
             System.out.println(field.getName());
-            // import com.fasterxml.jackson.annotation.JsonFormat;
-            // @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8");
             String dateJsonFormat = "@JsonFormat(pattern=\"" + dateFormat
                     + "\",timezone=\"GMT+8\")";
             field.addAnnotation(dateJsonFormat);
+            dateRemark = "【格式：" + dateFormat + "】";
         }
+
+        String remarks = introspectedColumn.getRemarks();
+        StringBuilder sbAnnotation = new StringBuilder();
+        sbAnnotation.append("@ApiModelProperty(");
+        sbAnnotation.append("value = ").append('"').append(remarks);
+        if (!StringUtils.isEmpty(dateRemark)) {
+            sbAnnotation.append(dateRemark);
+        }
+        sbAnnotation.append('"');
+        sbAnnotation.append(")");
+
+        field.addAnnotation(sbAnnotation.toString());
 
 
         return true;

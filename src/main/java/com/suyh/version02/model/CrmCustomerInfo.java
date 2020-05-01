@@ -12,7 +12,7 @@ import java.util.Date;
  * 
  * @table: CRM_CUSTOMER_INFO
  * @author: suyh
- * @date: 2020-05-01 16:30:08
+ * @date: 2020-05-01 16:38:15
  */
 @ApiModel
 public class CrmCustomerInfo implements Serializable {
@@ -90,8 +90,8 @@ public class CrmCustomerInfo implements Serializable {
      * Column: CREATED_DATE
      *   创建时间
      */
-    @ApiModelProperty(value = "创建时间")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @ApiModelProperty(value = "创建时间【格式：yyyy-MM-dd HH:mm:ss】")
     private Date createdDate;
 
     /**
