@@ -37,7 +37,7 @@
             <property name="swagger" value="true"/>
             <property name="format_date" value="true"/>
             <property name="dateFormat" value="yyyy-MM-dd"/>
-            <property name="author" value="suyh"/>
+            <property name="author" value="suyu"/>
         </plugin>
 
 <!--        <commentGenerator>-->
