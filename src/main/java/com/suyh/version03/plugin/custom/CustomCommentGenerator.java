@@ -18,7 +18,6 @@ import java.util.Set;
  */
 public class CustomCommentGenerator implements CommentGenerator {
 
-    private Properties properties = new Properties();
     private boolean suppressDate = false;
     private boolean suppressAllComments = false;
     private boolean addRemarkComments = false;
@@ -55,7 +54,6 @@ public class CustomCommentGenerator implements CommentGenerator {
     }
 
     public void addConfigurationProperties(Properties properties) {
-        this.properties.putAll(properties);
         this.suppressDate = StringUtility.isTrue(properties.getProperty("suppressDate"));
         this.suppressAllComments = StringUtility.isTrue(properties.getProperty("suppressAllComments"));
         this.addRemarkComments = StringUtility.isTrue(properties.getProperty("addRemarkComments"));
@@ -79,10 +77,7 @@ public class CustomCommentGenerator implements CommentGenerator {
 
         String s = this.getDateString();
         if (s != null) {
-            StringBuilder sbDate = new StringBuilder();
-            sbDate.append(" * @Date ");
-            sbDate.append(s);
-            javaElement.addJavaDocLine(sbDate.toString());
+            javaElement.addJavaDocLine(" * @Date " + s);
         }
     }
 
@@ -108,7 +103,7 @@ public class CustomCommentGenerator implements CommentGenerator {
             innerClass.addJavaDocLine(" */");
         }
     }
-	
+
     @Override
     public void addClassComment(
             InnerClass innerClass,
@@ -156,7 +151,7 @@ public class CustomCommentGenerator implements CommentGenerator {
 
     /**
      * suyh
-     * 这个方法估计是生成字段注释的方法
+     * 这个方法是生成字段注释的方法
      *
      * @param field
      * @param introspectedTable
@@ -195,7 +190,7 @@ public class CustomCommentGenerator implements CommentGenerator {
             field.addJavaDocLine(" */");
         }
     }
-	
+
     @Override
     public void addGeneralMethodComment(Method method, IntrospectedTable introspectedTable) {
 //        if (!this.suppressAllComments) {

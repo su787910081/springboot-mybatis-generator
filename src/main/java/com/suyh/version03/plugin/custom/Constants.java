@@ -1,6 +1,6 @@
 package com.suyh.version03.plugin.custom;
 
-public class Constans {
+public class Constants {
     public static final String PRO_DATE_FORMAT = "dateFormat";
 
     // 所有支持的注解，这个注解在配置文件中使用。要与这些字符串做比较。

@@ -9,7 +9,6 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.config.Context;
 import org.springframework.util.StringUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class AnnotationPlugin extends PluginAdapter {
@@ -41,7 +40,7 @@ public class AnnotationPlugin extends PluginAdapter {
 
         Context context = introspectedTable.getContext();
         if (StringUtils.isEmpty(dateFormat)) {
-            dateFormat = context.getProperty(Constans.PRO_DATE_FORMAT);
+            dateFormat = context.getProperty(Constants.PRO_DATE_FORMAT);
         }
     }
 
@@ -56,16 +55,16 @@ public class AnnotationPlugin extends PluginAdapter {
         super.setProperties(properties);
 
         if (!StringUtils.isEmpty(dateFormat)) {
-            dateFormat = (String) properties.getOrDefault(Constans.ANN_DATE, Constans.DEFAULT_DATE_FORMAT);
+            dateFormat = (String) properties.getOrDefault(Constants.ANN_DATE, Constants.DEFAULT_DATE_FORMAT);
         }
 
         // 初始化支持的所有注解
         String bEnable = null;
-        bEnable = (String) properties.getOrDefault(Constans.ANN_DATE, "false");
+        bEnable = (String) properties.getOrDefault(Constants.ANN_DATE, "false");
         if ("true".equals(bEnable)) {
             annotations.add(AnnotationEnum.JSON_DATE);
         }
-        bEnable = (String) properties.getOrDefault(Constans.ANN_SWAGGER, "false");
+        bEnable = (String) properties.getOrDefault(Constants.ANN_SWAGGER, "false");
         if ("true".equals(bEnable)) {
             annotations.add(AnnotationEnum.SWAGGER);
         }

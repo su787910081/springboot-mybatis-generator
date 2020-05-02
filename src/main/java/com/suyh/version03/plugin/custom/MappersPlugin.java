@@ -25,7 +25,7 @@ public class MappersPlugin extends PluginAdapter {
 
     private static final String PRO_MAPPERS = "mappers";
 
-    private String dateFormat = Constans.DEFAULT_DATE_FORMAT;
+    private String dateFormat = Constants.DEFAULT_DATE_FORMAT;
     private String javaFileEncoding;
 
     private static final FullyQualifiedJavaType simpleMapperType;
@@ -54,7 +54,7 @@ public class MappersPlugin extends PluginAdapter {
 
         Context context = introspectedTable.getContext();
         javaFileEncoding = context.getProperty(PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING);
-        String proDateFormat = context.getProperty(Constans.PRO_DATE_FORMAT);
+        String proDateFormat = context.getProperty(Constants.PRO_DATE_FORMAT);
         if (StringUtils.isEmpty(proDateFormat)) {
             dateFormat = proDateFormat;
         }
@@ -87,7 +87,7 @@ public class MappersPlugin extends PluginAdapter {
             // 模糊查询时必须要实现这个实体类
             filterEntity = true;
         }
-        String bEnable = (String) properties.getOrDefault(Constans.ANN_SWAGGER, "false");
+        String bEnable = (String) properties.getOrDefault(Constants.ANN_SWAGGER, "false");
         if ("true".equals(bEnable)) {
             annotations.add(AnnotationEnum.SWAGGER);
         }
@@ -121,15 +121,15 @@ public class MappersPlugin extends PluginAdapter {
         // import实体类
         interfaze.addImportedType(modelType);
 
-        // import接口
         if (mapperTypes.contains(simpleMapperType)) {
+            // 基本Mapper 接口类
             String shortName = simpleMapperType.getShortName();
             interfaze.addSuperInterface(new FullyQualifiedJavaType(
                     shortName + "<" + shortModelName + ">"));
             interfaze.addImportedType(simpleMapperType);
         }
         if (mapperTypes.contains(filterMapperType)) {
-            // 过滤器类
+            // 过滤器Mapper 接口类
             String filterName = getFilterClassShortName(modelName);
             FullyQualifiedJavaType filterType = new FullyQualifiedJavaType(filterName);
             String shortFilterName = filterType.getShortName();
@@ -141,7 +141,6 @@ public class MappersPlugin extends PluginAdapter {
             interfaze.addImportedType(filterType);
             interfaze.addImportedType(filterMapperType);
         }
-
 
         return true;
     }
@@ -273,7 +272,7 @@ public class MappersPlugin extends PluginAdapter {
      * @return
      */
     private CompilationUnit generateFilterEntity(IntrospectedTable introspectedTable, String basePackage) {
-        // suyh: 这里可以得到实体类的完整类名
+        // 这里可以得到实体类的完整类名
         String entityClazzType = introspectedTable.getBaseRecordType();
 
         // 这里可以得到实体类的短名，仅类名：  CrmCustomerInfo
@@ -312,13 +311,13 @@ public class MappersPlugin extends PluginAdapter {
 
         List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
         for (IntrospectedColumn introspectedColumn : allColumns) {
-            String javaProperty = introspectedColumn.getJavaProperty();
-
             FullyQualifiedJavaType fullyQualifiedJavaType = introspectedColumn.getFullyQualifiedJavaType();
             if (fullyQualifiedJavaType.equals(FullyQualifiedJavaType.getDateInstance())) {
+                String javaProperty = introspectedColumn.getJavaProperty();
+                String remarks = introspectedColumn.getRemarks();
                 // 添加两个字段，分别拼接 Before 和 After
-                addDateFilterField(filterClass, javaProperty + "Before");
-                addDateFilterField(filterClass, javaProperty + "After");
+                addDateFilterField(filterClass, javaProperty + "Before", remarks);
+                addDateFilterField(filterClass, javaProperty + "After", remarks);
             }
         }
 
@@ -345,7 +344,7 @@ public class MappersPlugin extends PluginAdapter {
      * @param filterClass
      * @param fieldName
      */
-    private void addDateFilterField(TopLevelClass filterClass, String fieldName) {
+    private void addDateFilterField(TopLevelClass filterClass, String fieldName, String remarks) {
         Field field = new Field(fieldName, FullyQualifiedJavaType.getDateInstance());
 
         // 这些要自己处理，其他插件是不会走这里的。
@@ -357,6 +356,13 @@ public class MappersPlugin extends PluginAdapter {
         }
         field.setVisibility(JavaVisibility.PRIVATE);
         field.addAnnotation(dateJsonFormat);
+
+        if (annotations.contains(AnnotationEnum.SWAGGER)) {
+            // 添加Swagger 注解
+            String strAnnotation = String.format(
+                    "@ApiModelProperty(value = \"日期匹配左边界。%s\")", remarks);
+            field.addAnnotation(strAnnotation);
+        }
 
         filterClass.addField(field);
         filterClass.addImportedType(field.getType());
@@ -390,7 +396,7 @@ public class MappersPlugin extends PluginAdapter {
     }
 
     protected String getDateString() {
-        SimpleDateFormat sdf = new SimpleDateFormat(Constans.DEFAULT_DATE_FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT);
         return sdf.format(new Date());
     }
 
@@ -411,32 +417,6 @@ public class MappersPlugin extends PluginAdapter {
         XmlElement whereFilterElement = makeQueryWhereFilterElement(introspectedTable);
         sqlMapSelectGenerated(document, introspectedTable,
                 "selectModelByFilter", whereFilterElement);
-//        XmlElement rootElement = document.getRootElement();
-//
-//        String baseResultMapId = introspectedTable.getBaseResultMapId();
-//        String tableName = introspectedTable.getFullyQualifiedTableNameAtRuntime();
-//
-//        StringBuilder allColumnName = new StringBuilder();
-//        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-//        for (int i = 0; i < allColumns.size(); i++) {
-//            IntrospectedColumn introspectedColumn = allColumns.get(i);
-//            String columnName = MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn);
-//            if (i != 0) {
-//                allColumnName.append(", ");
-//            }
-//            allColumnName.append(columnName);
-//        }
-//
-//
-//
-//        // select 标签，新建，并直接添加到root 中
-//        XmlElement selectByFilterElement = new XmlElement("select");
-//        selectByFilterElement.addAttribute(new Attribute("id", "selectModelByFilter"));
-//        selectByFilterElement.addAttribute(new Attribute("resultMap", baseResultMapId));
-//        selectByFilterElement.addElement(new TextElement("SELECT " + allColumnName));
-//        selectByFilterElement.addElement(new TextElement("FROM " + tableName));
-//        selectByFilterElement.addElement(whereFilterElement);
-//        rootElement.addElement(selectByFilterElement);
     }
 
     /**
@@ -521,7 +501,7 @@ public class MappersPlugin extends PluginAdapter {
     }
 
     /**
-     * 自定义，生成SQL，id: selectByFilterLike
+     * 自定义，生成模糊查询SQL，id: selectByFilterLike
      *
      * @param document
      * @param introspectedTable
@@ -644,7 +624,7 @@ public class MappersPlugin extends PluginAdapter {
             content = String.format("AND %s LIKE '%%' || #{filter.%s, jdbcType = %s} || '%%'",
                     columnName, javaProperty, jdbcTypeName);
         } else {
-            throw new RuntimeException("未知数据库类型: " + dbSource);
+            throw new RuntimeException("未知(未实现模糊查询)数据库类型: " + dbSource);
         }
         ifLikePropertyElement.addElement(new TextElement(content));
 

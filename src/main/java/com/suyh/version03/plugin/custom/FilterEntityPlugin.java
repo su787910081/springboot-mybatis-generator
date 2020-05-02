@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class FilterEntityPlugin extends PluginAdapter {
 
-    private String dateFormat = Constans.DEFAULT_DATE_FORMAT;
+    private String dateFormat = Constants.DEFAULT_DATE_FORMAT;
     private String javaFileEncoding;
 
     @Override
@@ -173,7 +173,7 @@ public class FilterEntityPlugin extends PluginAdapter {
     }
 
     protected String getDateString() {
-        SimpleDateFormat sdf = new SimpleDateFormat(Constans.DEFAULT_DATE_FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT);
         return sdf.format(new Date());
     }
 
