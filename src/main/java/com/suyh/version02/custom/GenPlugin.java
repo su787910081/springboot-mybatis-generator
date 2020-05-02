@@ -186,14 +186,13 @@ public class GenPlugin extends PluginAdapter {
     }
 
     /**
-     * 生成的Mapper接口
+     * 生成的Mapper接口类
      *
      * @param interfaze
      * @param topLevelClass
      * @param introspectedTable
      * @return
      */
-
     @Override
     public boolean clientGenerated(
             Interface interfaze, TopLevelClass topLevelClass,
@@ -220,20 +219,86 @@ public class GenPlugin extends PluginAdapter {
     }
 
     /**
+     * 是否要生成，通过主键删除记录。id: deleteByPrimaryKey
+     *
+     * @param element
+     * @param introspectedTable
+     * @return
+     */
+    @Override
+    public boolean sqlMapDeleteByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return super.sqlMapDeleteByPrimaryKeyElementGenerated(element, introspectedTable);
+    }
+
+    /**
+     * 是否生成插入mapper, id: insert
+     *
+     * @param element
+     * @param introspectedTable
+     * @return
+     */
+    @Override
+    public boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return super.sqlMapInsertElementGenerated(element, introspectedTable);
+    }
+
+    /**
+     * 是否要生成 mapper, id: selectByPrimaryKey
+     * 如果返回false 则不会生成对应的SQL以及mapper
+     *
+     * @param element
+     * @param introspectedTable
+     * @return
+     */
+    @Override
+    public boolean sqlMapSelectByPrimaryKeyElementGenerated(
+            XmlElement element, IntrospectedTable introspectedTable) {
+        return super.sqlMapSelectByPrimaryKeyElementGenerated(element, introspectedTable);
+    }
+
+    /**
+     * 是否要生成 mapper, id: selectAll
+     * 如果返回false 则不会生成对应的SQL以及mapper
+     *
+     * @param element
+     * @param introspectedTable
+     * @return
+     */
+    @Override
+    public boolean sqlMapSelectAllElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return super.sqlMapSelectAllElementGenerated(element, introspectedTable);
+    }
+
+
+    /**
+     * id: updateByPrimaryKey
+     *
+     * @param element
+     * @param introspectedTable
+     * @return
+     */
+    @Override
+    public boolean sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return super.sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(element, introspectedTable);
+    }
+
+    /**
      * 拼装SQL语句生成Mapper接口映射文件
      */
     @Override
     public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
         XmlElement rootElement = document.getRootElement();
         // 之前 table 配置 保留了 一个SelectByPrimaryKey 设置为true 此处删除
-        List<Element> list = rootElement.getElements();
-        while (list.size() > 1) {
-            // 仅保留自动生成的 <resultMap> 标签，其他的 select insert update delete 全部删除。
-            list.remove(list.size() - 1);
-        }
+//        List<Element> list = rootElement.getElements();
+//        while (list.size() > 1) {
+//            // 仅保留自动生成的 <resultMap> 标签，其他的 select insert update delete 全部删除。
+//            list.remove(list.size() - 1);
+//        }
 
         // 数据库表名
         String tableName = introspectedTable.getFullyQualifiedTableNameAtRuntime();
+        // 就是 BaseResultMap 这个值
+        String baseResultMapId = introspectedTable.getBaseResultMapId();
         // 数据库全部列名
         StringBuilder columns = new StringBuilder();
         // where 子句中的条件判断语句，过滤条件。用于更新、删除时作为过滤条件使用。
@@ -343,12 +408,13 @@ public class GenPlugin extends PluginAdapter {
 
     /**
      * 创建更新通过model
+     *
      * @param updateIfSql
      * @return
      */
     private Element createUpdateModel(String updateIfSql, String tableName) {
         XmlElement insertElement = new XmlElement("update");
-        insertElement.addAttribute(new Attribute("id", "updateModel"));
+        insertElement.addAttribute(new Attribute("id", "updateModelByFilter"));
         String strSql =
                 String.format("UPDATE %s \n", tableName) +
                         "    <set>\n" +
@@ -364,6 +430,7 @@ public class GenPlugin extends PluginAdapter {
 
     /**
      * 创建插入一条实体的SQL 标签
+     *
      * @param insertModel
      * @param tableName
      * @return
@@ -379,6 +446,7 @@ public class GenPlugin extends PluginAdapter {
 
     /**
      * 创建一条SQL，用于查询。通过过滤条件查询。
+     *
      * @param selectId
      * @param tableName
      * @return
@@ -408,7 +476,6 @@ public class GenPlugin extends PluginAdapter {
         sql.addElement(new TextElement(sqlStr));
         return sql;
     }
-
 
 
     /**

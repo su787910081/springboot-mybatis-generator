@@ -40,16 +40,16 @@
             <property name="author" value="suyu"/>
         </plugin>
 
-<!--        <commentGenerator>-->
-<!--            <property name="author" value="suyh"/>-->
-<!--            <property name="dateFormat" value="yyyy-MM-dd"/>-->
+        <!--        <commentGenerator>-->
+        <!--            <property name="author" value="suyh"/>-->
+        <!--            <property name="dateFormat" value="yyyy-MM-dd"/>-->
 
-<!--            <property name="suppressAllComments" value="false"/>&lt;!&ndash; 是否取消注释 &ndash;&gt;-->
-<!--            <property name="suppressDate" value="true"/> &lt;!&ndash; 是否生成注释代时间戳&ndash;&gt;-->
-<!--            &lt;!&ndash; 添加表字段的注释，这个需要同时配置 suppressAllComments = false 默认就是false &ndash;&gt;-->
-<!--            <property name="addRemarkComments" value="false"/>-->
+        <!--            <property name="suppressAllComments" value="false"/>&lt;!&ndash; 是否取消注释 &ndash;&gt;-->
+        <!--            <property name="suppressDate" value="true"/> &lt;!&ndash; 是否生成注释代时间戳&ndash;&gt;-->
+        <!--            &lt;!&ndash; 添加表字段的注释，这个需要同时配置 suppressAllComments = false 默认就是false &ndash;&gt;-->
+        <!--            <property name="addRemarkComments" value="false"/>-->
 
-<!--        </commentGenerator>-->
+        <!--        </commentGenerator>-->
 
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
@@ -102,9 +102,13 @@
                enableUpdateByExample="true"
                enableDeleteByExample="true"
                enableSelectByExample="true"
-               selectByExampleQueryId="true">
+               selectByExampleQueryId="true"
+               enableDeleteByPrimaryKey="true"
+               enableInsert="true"
+               enableSelectByPrimaryKey="true"
+               enableUpdateByPrimaryKey="false">
             <!-- 主键生成方式 -->
-<!--            <generatedKey column="customer_id" sqlStatement="Mysql" identity="true"/>-->
+            <!--            <generatedKey column="customer_id" sqlStatement="Mysql" identity="true"/>-->
         </table>
 
     </context>

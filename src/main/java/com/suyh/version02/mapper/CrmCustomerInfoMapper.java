@@ -12,6 +12,4 @@ public interface CrmCustomerInfoMapper extends BaseMapper<CrmCustomerInfo> {
     CrmCustomerInfo selectByPrimaryKey(String customerId);
 
     List<CrmCustomerInfo> selectAll();
-
-    int updateByPrimaryKey(CrmCustomerInfo record);
 }

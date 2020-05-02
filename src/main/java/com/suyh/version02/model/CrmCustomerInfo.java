@@ -12,7 +12,7 @@ import java.util.Date;
  * 
  * @table: CRM_CUSTOMER_INFO
  * @author: suyu
- * @date: 2020-05-01 23:43:37
+ * @date: 2020-05-02 09:28:57
  */
 @ApiModel(value = "客户基本信息表结构：内部客户、供应商、承运商")
 public class CrmCustomerInfo implements Serializable {
