@@ -23,14 +23,21 @@
         <!-- 格式化 XML 代码 -->
         <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
 
+        <!-- 自定义属性 -->
+        <!-- 自定义属性: 日期格式化 -->
+        <property name="dateFormat" value="yyyy-MM-dd"/>
+
         <!-- 生成的entity，将implements Serializable -->
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="com.suyh.version03.plugin.custom.FilterEntityPlugin">
+            <!-- 尝试添加一个自己的实体类 -->
+        </plugin>
         <plugin type="com.suyh.version03.plugin.custom.AnnotationPlugin">
             <!-- 自定义配置属性  -->
-            <property name="swagger" value="true"/>
-            <property name="format_date" value="true"/>
-            <property name="dateFormat" value="yyyy-MM-dd"/>
+            <property name="ann_swagger" value="true"/>
+            <property name="ann_format_date" value="true"/>
+<!--            <property name="dateFormat" value="yyyy-MM-dd"/>-->
         </plugin>
         <plugin type="com.suyh.version03.plugin.custom.CommentPlugin">
             <!-- 自定义配置属性  -->
@@ -44,12 +51,10 @@
             <!-- 自定义配置属性  -->
             <property name="swagger" value="true"/>
             <property name="format_date" value="true"/>
-            <property name="dateFormat" value="yyyy-MM-dd"/>
+<!--            <property name="dateFormat" value="yyyy-MM-dd"/>-->
             <property name="author" value="suyh"/>
         </plugin>
-        <plugin type="com.suyh.version03.plugin.custom.FilterEntityPlugin">
-            <!-- 尝试添加一个自己的实体类 -->
-        </plugin>
+
 
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"

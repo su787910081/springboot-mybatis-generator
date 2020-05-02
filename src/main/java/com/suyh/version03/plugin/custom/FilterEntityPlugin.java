@@ -1,13 +1,11 @@
 package com.suyh.version03.plugin.custom;
 
-import org.mybatis.generator.api.GeneratedJavaFile;
-import org.mybatis.generator.api.IntrospectedTable;
-import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.dom.java.CompilationUnit;
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-import org.mybatis.generator.api.dom.java.JavaVisibility;
-import org.mybatis.generator.api.dom.java.TopLevelClass;
+import org.mybatis.generator.api.*;
+import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.config.Context;
+import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
+import org.mybatis.generator.config.PropertyRegistry;
+import org.mybatis.generator.internal.util.JavaBeansUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,13 +17,28 @@ import java.util.List;
  * 尝试实现一个过滤器实体类
  */
 public class FilterEntityPlugin extends PluginAdapter {
+
+    private final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private String dateFormat = DEFAULT_DATE_FORMAT;
+    private String javaFileEncoding;
+
     @Override
     public boolean validate(List<String> warnings) {
         return true;
     }
 
+    @Override
+    public void initialized(IntrospectedTable introspectedTable) {
+        super.initialized(introspectedTable);
+
+        Context context = introspectedTable.getContext();
+        dateFormat = context.getProperty(Constans.PRO_DATE_FORMAT);
+        javaFileEncoding = context.getProperty(PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING);
+    }
+
     /**
      * 实现自己的Java 文件，扩展
+     *
      * @param introspectedTable
      * @return
      */
@@ -34,116 +47,133 @@ public class FilterEntityPlugin extends PluginAdapter {
 
         Context context = introspectedTable.getContext();
 
-        String basePackage = context.getProperty("baseJavaPackage");
-        String apiProject = context.getProperty("apiProject");
+        JavaModelGeneratorConfiguration javaModelGeneratorConfiguration
+                = context.getJavaModelGeneratorConfiguration();
+        String targetPackage = javaModelGeneratorConfiguration.getTargetPackage();
+        String targetProject = javaModelGeneratorConfiguration.getTargetProject();
+
         List<GeneratedJavaFile> list = new ArrayList<>();
 
-        List<CompilationUnit> addDTOs = addDTOs(introspectedTable, basePackage);
+        CompilationUnit filterEntity = generateFilterEntity(introspectedTable, targetPackage);
+        List<CompilationUnit> javaClass = Arrays.asList(filterEntity);
 
-        addDTOs.forEach(unit -> list.add(
-                new GeneratedJavaFile(unit, apiProject, this.context.getProperty("javaFileEncoding"), this.context.getJavaFormatter())
-        ));
+        for (CompilationUnit unit : javaClass) {
+            GeneratedJavaFile generatedJavaFile = new GeneratedJavaFile(unit, targetProject,
+                    javaFileEncoding, this.context.getJavaFormatter());
+            list.add(generatedJavaFile);
+        }
 
         return list;
     }
 
-    private List<CompilationUnit> addDTOs(IntrospectedTable introspectedTable,  String basePackage) {
-        CompilationUnit reqUnit = generateReqUnit(introspectedTable, basePackage);
-        CompilationUnit respUnit = generateRespUnit(introspectedTable, basePackage);
-        return Arrays.asList(reqUnit, respUnit);
-    }
-
-    private CompilationUnit generateReqUnit(IntrospectedTable introspectedTable,  String basePackage) {
+    /**
+     * 自定义一个生成过滤器的一个实体类
+     * 有问题可以找到工具实现的类 SimpleModelGenerator.getCompilationUnits() 的方法作参考
+     * org.mybatis.generator.codegen.mybatis3.model.SimpleModelGenerator
+     *
+     * @param introspectedTable
+     * @param basePackage
+     * @return
+     */
+    private CompilationUnit generateFilterEntity(IntrospectedTable introspectedTable, String basePackage) {
+        // suyh: 这里可以得到实体类的完整类名
         String entityClazzType = introspectedTable.getBaseRecordType();
-        String destPackage = basePackage + ".dto.req";
+        String destPackage = basePackage + ".filter";
 
-        String domainObjectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        // 这里可以得到实体类的短名，仅类名：  CrmCustomerInfo
+        String modelClassName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
 
-        StringBuilder builder = new StringBuilder();
+        // 父类类型，我这里直接使用实体类
+        FullyQualifiedJavaType superClassType = new FullyQualifiedJavaType(entityClazzType);
 
-        FullyQualifiedJavaType superClassType = new FullyQualifiedJavaType(
-                builder.append("BaseReq<")
-                        .append(entityClazzType)
-                        .append(">").toString()
-        );
+        // 拼接完整类名
+        TopLevelClass filterClass = new TopLevelClass(
+                String.format("%s.%sFilter", destPackage, modelClassName));
 
-        TopLevelClass dto = new TopLevelClass(
-                builder.delete(0, builder.length())
-                        .append(destPackage)
-                        .append(".")
-                        .append(domainObjectName)
-                        .append("Req")
-                        .toString()
-        );
+        filterClass.setSuperClass(superClassType);
+        filterClass.setVisibility(JavaVisibility.PUBLIC);
 
-        dto.setSuperClass(superClassType);
-        dto.setVisibility(JavaVisibility.PUBLIC);
-
-//        FullyQualifiedJavaType baseReqInstance = FullyQualifiedJavaTypeProxyFactory.getBaseReqInstance();
-        FullyQualifiedJavaType baseReqInstance = null;  // TODO: 暂时不清楚这个怎么处理。
         FullyQualifiedJavaType modelJavaType = new FullyQualifiedJavaType(entityClazzType);
-        dto.addImportedType(baseReqInstance);
-        dto.addImportedType(modelJavaType);
-        dto.addJavaDocLine("/**\n" +
-                " * " + getDomainName(introspectedTable) + " DTO\n" +
-                " *\n" +
-                " * @author " + getCurUser() + " 2019/1/8 Create 1.0  <br>\n" +
-                " * @version 1.0\n" +
-                " */");
+        filterClass.addImportedType(modelJavaType);
 
-        return dto;
+        filterClass.addJavaDocLine("/**");
+        filterClass.addJavaDocLine(" * 实体过滤器类");
+        filterClass.addJavaDocLine(" *");
+        filterClass.addJavaDocLine(" * @author " + getCurUser());
+        filterClass.addJavaDocLine(" * @date " + getCurDate());
+        filterClass.addJavaDocLine(" */");
+
+        // 添加字段
+
+        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
+        for (IntrospectedColumn introspectedColumn : allColumns) {
+            String javaProperty = introspectedColumn.getJavaProperty();
+
+            FullyQualifiedJavaType fullyQualifiedJavaType = introspectedColumn.getFullyQualifiedJavaType();
+            if (fullyQualifiedJavaType.equals(FullyQualifiedJavaType.getDateInstance())) {
+                // 添加两个字段，分别拼接 Before 和 After
+                addDateFilterField(filterClass, javaProperty + "Before");
+                addDateFilterField(filterClass, javaProperty + "After");
+            }
+        }
+
+        return filterClass;
     }
 
-    private String getDomainName(IntrospectedTable introspectedTable) {
-        return introspectedTable.getRemarks() == null ?  introspectedTable.getFullyQualifiedTable().getDomainObjectName() : introspectedTable.getRemarks();
+    /**
+     * 对日期类型的字段，添加过滤字段
+     *
+     * @param filterClass
+     * @param fieldName
+     */
+    private void addDateFilterField(TopLevelClass filterClass, String fieldName) {
+        Field field = new Field(fieldName, FullyQualifiedJavaType.getDateInstance());
+
+        // 这些要自己处理，其他插件是不会走这里的。
+        // 日期类我们要添加时间的序列化注解
+        String dateJsonFormat = "@JsonFormat(pattern = \""
+                + dateFormat + "\", timezone = \"GMT+8\")";
+        for (String entity : AnnotationEnum.JSON_DATE.getImportEntities()) {
+            filterClass.addImportedType(entity);
+        }
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.addAnnotation(dateJsonFormat);
+
+        filterClass.addField(field);
+        filterClass.addImportedType(field.getType());
+        filterClass.addMethod(makeJavaGetterMethod(field));
+        filterClass.addMethod(makeJavaSetterMethod(field));
     }
 
-    private CompilationUnit generateRespUnit(IntrospectedTable introspectedTable, String basePackage) {
-        String entityClazzType = introspectedTable.getBaseRecordType();
-        String destPackage = basePackage + ".dto.resp";
+    private static Method makeJavaSetterMethod(Field field) {
+        String property = field.getName();
+        FullyQualifiedJavaType fqjt = field.getType();
+        Method method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName(JavaBeansUtil.getSetterMethodName(property));
+        method.addParameter(new Parameter(fqjt, property));
+        method.addBodyLine("this." + property + " = " + property + ';');
 
-        String domainObjectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        return method;
+    }
 
-        StringBuilder builder = new StringBuilder();
+    private static Method makeJavaGetterMethod(Field field) {
+        String property = field.getName();
+        Method method = new Method();
+        String getterBeforeMethodName = JavaBeansUtil.getGetterMethodName(
+                property, field.getType());
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(field.getType());
+        method.setName(getterBeforeMethodName);
+        method.addBodyLine(String.format("return %s;", property));
 
-        FullyQualifiedJavaType superClassType = new FullyQualifiedJavaType(
-                builder.append("BaseResp<")
-                        .append(entityClazzType)
-                        .append(">").toString()
-        );
-
-        TopLevelClass dto = new TopLevelClass(
-                builder.delete(0, builder.length())
-                        .append(destPackage)
-                        .append(".")
-                        .append(domainObjectName)
-                        .append("Resp")
-                        .toString()
-        );
-
-        dto.setSuperClass(superClassType);
-        dto.setVisibility(JavaVisibility.PUBLIC);
-
-//        FullyQualifiedJavaType baseReqInstance = FullyQualifiedJavaTypeProxyFactory.getBaseRespInstance();
-        FullyQualifiedJavaType baseReqInstance  = null; // TODO: 暂时不清楚这个怎么处理。
-        FullyQualifiedJavaType modelJavaType = new FullyQualifiedJavaType(entityClazzType);
-        dto.addImportedType(baseReqInstance);
-        dto.addImportedType(modelJavaType);
-        dto.addJavaDocLine("/**\n" +
-                " * " + getDomainName(introspectedTable) + " DTO\n" +
-                " *\n" +
-                " * @author " + getCurUser() + " " + getCurDate() + " Create 1.0  <br>\n" +
-                " * @version 1.0\n" +
-                " */");
-
-        return dto;
+        return method;
     }
 
     private String getCurDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date());
     }
-
 
     private static String getCurUser() {
         return System.getProperty("user.name");

@@ -14,8 +14,8 @@ import java.util.*;
 public class AnnotationPlugin extends PluginAdapter {
 
     // 所有支持的注解，这个注解在配置文件中使用。要与这些字符串做比较。
-    private final static String ANN_SWAGGER = "swagger";
-    private final static String ANN_DATE = "format_date";
+    private final static String ANN_SWAGGER = "ann_swagger";
+    private final static String ANN_DATE = "ann_format_date";
     private static final String PRO_DATE_FORMAT = "dateFormat";
 
     private final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
