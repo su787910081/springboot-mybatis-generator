@@ -103,9 +103,11 @@
                enableDeleteByExample="true"
                enableSelectByExample="true"
                selectByExampleQueryId="true"
+
                enableDeleteByPrimaryKey="true"
                enableInsert="true"
                enableSelectByPrimaryKey="true"
+
                enableUpdateByPrimaryKey="false">
             <!-- 主键生成方式 -->
             <!--            <generatedKey column="customer_id" sqlStatement="Mysql" identity="true"/>-->

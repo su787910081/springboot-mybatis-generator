@@ -11,7 +11,6 @@ import org.mybatis.generator.config.CommentGeneratorConfiguration;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.internal.util.StringUtility;
 
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -287,292 +286,128 @@ public class GenPlugin extends PluginAdapter {
      */
     @Override
     public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
+        sqlMapSelectModelByFilterGenerated(document, introspectedTable);
+        sqlMapUpdateModelByFilterGenerated(document, introspectedTable);
+
+        return super.sqlMapDocumentGenerated(document, introspectedTable);
+    }
+
+
+    /**
+     * 自定义的，生成SQL, id: selectByFilter
+     * @param document
+     * @param introspectedTable
+     */
+    private void sqlMapSelectModelByFilterGenerated(Document document, IntrospectedTable introspectedTable) {
         XmlElement rootElement = document.getRootElement();
-        // 之前 table 配置 保留了 一个SelectByPrimaryKey 设置为true 此处删除
-//        List<Element> list = rootElement.getElements();
-//        while (list.size() > 1) {
-//            // 仅保留自动生成的 <resultMap> 标签，其他的 select insert update delete 全部删除。
-//            list.remove(list.size() - 1);
-//        }
 
-        // 数据库表名
-        String tableName = introspectedTable.getFullyQualifiedTableNameAtRuntime();
-        // 就是 BaseResultMap 这个值
         String baseResultMapId = introspectedTable.getBaseResultMapId();
-        // 数据库全部列名
-        StringBuilder columns = new StringBuilder();
-        // where 子句中的条件判断语句，过滤条件。用于更新、删除时作为过滤条件使用。
-        StringBuilder whereFilterIfSql = new StringBuilder();
-        // update 子句的条件判断语句
-        StringBuilder updateModelIfSql = new StringBuilder();
+        String tableName = introspectedTable.getFullyQualifiedTableNameAtRuntime();
 
-        // 插入的model 属性
-        StringBuilder insertModelSql = new StringBuilder();
+        StringBuilder allColumnName = new StringBuilder();
+        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
+        for (int i = 0; i < allColumns.size(); i++) {
+            IntrospectedColumn introspectedColumn = allColumns.get(i);
+            String columnName = MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn);
+            if (i != 0) {
+                allColumnName.append(", ");
+            }
+            allColumnName.append(columnName);
+        }
 
-        // 数据库字段名
-        String columnName = null;
-        // java字段名
-        String javaProperty = null;
-        int colNum = 0;
-        for (IntrospectedColumn introspectedColumn : introspectedTable.getAllColumns()) {
-            ++colNum;
-            columnName = MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn);
-            javaProperty = introspectedColumn.getJavaProperty();
+        // where 标签中的条件判断语句，过滤条件。用于更新、删除时作为过滤条件使用。
+        XmlElement whereFilterElement = makeWhereFilterElement(introspectedTable);
 
+        // select 标签，新建，并直接添加到root 中
+        XmlElement selectByFilterElement = new XmlElement("select");
+        selectByFilterElement.addAttribute(new Attribute("id", "selectModelByFilter"));
+        selectByFilterElement.addAttribute(new Attribute("resultMap", baseResultMapId));
+        selectByFilterElement.addElement(new TextElement("SELECT " + allColumnName));
+        selectByFilterElement.addElement(new TextElement("FROM " + tableName));
+        selectByFilterElement.addElement(whereFilterElement);
+        rootElement.addElement(selectByFilterElement);
+    }
+
+    /**
+     * 自定义的，生成SQL, id: updateModelByFilter
+     * @param document
+     * @param introspectedTable
+     */
+    private void sqlMapUpdateModelByFilterGenerated(Document document, IntrospectedTable introspectedTable) {
+        XmlElement rootElement = document.getRootElement();
+
+        String tableName = introspectedTable.getFullyQualifiedTableNameAtRuntime();
+
+        XmlElement ifModelElement = new XmlElement("if");
+        ifModelElement.addAttribute(new Attribute("test", "null != model"));
+
+        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
+        for (IntrospectedColumn introspectedColumn : allColumns) {
+            String columnName = MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn);
+            String javaProperty = introspectedColumn.getJavaProperty();
+            String jdbcTypeName = introspectedColumn.getJdbcTypeName();
+
+            XmlElement ifModelPropertyElement = new XmlElement("if");
+            ifModelPropertyElement.addAttribute(new Attribute("test",
+                    "null != model." + javaProperty));
+            String content = String.format("%s = #{model.%s, jdbcType = %s},",
+                    columnName, javaProperty, jdbcTypeName);
+            ifModelPropertyElement.addElement(new TextElement(content));
+            ifModelElement.addElement(ifModelPropertyElement);
+        }
+
+        // set 标签中的条件判断语句，过滤条件。用于更新
+        XmlElement setModelElement = new XmlElement("set");    // where 标签
+        setModelElement.addElement(ifModelElement);
+
+        // where 标签中的条件判断语句，过滤条件。用于更新、删除时作为过滤条件使用。
+        XmlElement whereFilterElement = makeWhereFilterElement(introspectedTable);
+
+        // update 标签，新建，并直接添加到root 中
+        XmlElement updateModelByFilterElement = new XmlElement("update");
+        updateModelByFilterElement.addAttribute(new Attribute("id", "updateModelByFilter"));
+        updateModelByFilterElement.addElement(new TextElement("UPDATE  " + tableName));
+        updateModelByFilterElement.addElement(setModelElement);
+        updateModelByFilterElement.addElement(whereFilterElement);
+        rootElement.addElement(updateModelByFilterElement);
+    }
+
+    /**
+     * 生成一个 where 标签，用于指定filter 过滤器。添加if 判断条件。
+     * @param introspectedTable
+     * @return
+     */
+    XmlElement makeWhereFilterElement(IntrospectedTable introspectedTable) {
+        XmlElement ifWhereFilterElement = new XmlElement("if");
+        ifWhereFilterElement.addAttribute(new Attribute("test", "null != filter"));
+
+        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
+        for (IntrospectedColumn introspectedColumn : allColumns) {
+            String columnName = MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn);
+            String javaProperty = introspectedColumn.getJavaProperty();
             String jdbcTypeName = introspectedColumn.getJdbcTypeName();
             FullyQualifiedJavaType javaType = introspectedColumn.getFullyQualifiedJavaType();
-
-            // 拼接字段
-            String sep = "";
-            if (colNum != 1) {
-                sep = ",";
-            }
-            columns.append(sep).append(columnName);
-
-
-            // 拼接SQL
-            // #{model.customerId}
-            insertModelSql.append(String.format("    %s#{model.%s, jdbcType = %s}\n",
-                    sep, javaProperty, jdbcTypeName));
 
             String ifString = "";   // 字符串类型要多处理一个''
             if (PrimitiveTypeWrapper.getStringInstance().equals(javaType)) {
                 // 字符串才会做 空字符串的判断。其他类型不能做这个比较。否则会报错
                 ifString = String.format("and '' != model.%s", javaProperty);
             }
-            whereFilterIfSql.append(String.format(
-                    "        <if test=\"null != filter.%s %s \">" +
-                            " and %s = #{filter.%s, jdbcType = %s}</if>\n",
-                    javaProperty, ifString, columnName, javaProperty, jdbcTypeName));
 
-            // update 更新语句的 if 条件判断语句  如果更新的时候给了一个空字符串，那么数据一样会被修改
-            // <if test="null != model.customerId">, CUSTOMER_ID = #{model.customerId, jdbcType=VARCHAR}</if>
-            updateModelIfSql.append(String.format(
-                    "        <if test=\"null != model.%s\">%s = #{model.%s, jdbcType = %s}, </if>\n",
-                    javaProperty, columnName, javaProperty, jdbcTypeName));
+            XmlElement ifFilterPropertyElement = new XmlElement("if");
+            String ifPropertyValue = String.format("null != filter.%s %s ", javaProperty, ifString);
+            ifFilterPropertyElement.addAttribute(new Attribute("test", ifPropertyValue));
+            String content = String.format("AND %s = #{filter.%s, jdbcType = %s}",
+                    columnName, javaProperty, jdbcTypeName);
+            ifFilterPropertyElement.addElement(new TextElement(content));
+            ifWhereFilterElement.addElement(ifFilterPropertyElement);
         }
-        rootElement.addElement(createSql("sqlColumns", columns.toString()));
-        String whereSQL = String.format("<where>\n" +
-                "      <if test=\"null != filter\">\n" +
-                "%s" +
-                "      </if>\n" +
-                "    </where>", whereFilterIfSql.toString());
-        rootElement.addElement(createSql("sqlWhereFilter", whereSQL));
-        rootElement.addElement(createSql("sqlInsertModel", insertModelSql.toString()));
-        rootElement.addElement(createSelectByFilter("selectByFilter", tableName));
-        rootElement.addElement(createInsertModel("insertModel", tableName));
-//        rootElement.addElement(createSelect("selectById", tableName, pkColumn));
-//        rootElement.addElement(createSelect("selectOne", tableName, null));
-//        rootElement.addElement(createSelect("selectList", tableName, null));
-//        rootElement.addElement(createSelect("selectPage", tableName, null));
-//        rootElement.addElement(createSql("sql_save_columns",
-//                String.format("INSERT INTO %s(%s) values", tableName, columns.toString())));
-//        rootElement.addElement(createSql("sql_save_values",
-//                String.format("(\n%s)\n", saveValue.toString())));
-//        rootElement.addElement(createSave("save", pkColumn));
-//        rootElement.addElement(createSave("batchSave", null));
 
-        /**
-         * update sys_users
-         * <set>
-         * 	<if test="model != null">
-         * 	   <if test="username != null and username != ''">
-         * 	   	username=#{username},
-         * 	   </if>
-         * 	   <if test="email != null and email != ''">
-         * 	   	email=#{email},
-         * 	   </if>
-         * 	   <if test="modifiedUser != null and modifiedUser != ''">
-         * 	   	modifiedUser=#{modifiedUser},
-         * 	   </if>
-         * 	   <if test="mobile != null and mobile != ''">
-         * 	   	mobile=#{mobile},
-         * 	   </if>
-         * 	   modifiedTime=now()
-         * 	</if>
-         * </set>
-         * where id=#{id}
-         */
+        // where 标签中的条件判断语句，过滤条件。用于更新、删除时作为过滤条件使用。
+        XmlElement whereFilterElement = new XmlElement("where");    // where 标签
+        whereFilterElement.addElement(ifWhereFilterElement);
 
-        rootElement.addElement(createUpdateModel(updateModelIfSql.toString(), tableName));
-
-
-//        rootElement.addElement(createUpdate("update"));
-//        rootElement.addElement(createUpdate("batchUpdate"));
-//        rootElement.addElement(createDels(tableName, pkColumn, "delArray", "array"));
-//        rootElement.addElement(createDels(tableName, pkColumn, "delList", "list"));
-
-        return super.sqlMapDocumentGenerated(document, introspectedTable);
-
-    }
-
-    /**
-     * 创建更新通过model
-     *
-     * @param updateIfSql
-     * @return
-     */
-    private Element createUpdateModel(String updateIfSql, String tableName) {
-        XmlElement insertElement = new XmlElement("update");
-        insertElement.addAttribute(new Attribute("id", "updateModelByFilter"));
-        String strSql =
-                String.format("UPDATE %s \n", tableName) +
-                        "    <set>\n" +
-                        "      <if test=\"model != null\">\n" +
-                        updateIfSql +
-                        "      </if>\n" +
-                        "    </set>\n" +
-                        "    <include refid=\"sqlWhereFilter\"/>\n";
-
-        insertElement.addElement(new TextElement(strSql));
-        return insertElement;
-    }
-
-    /**
-     * 创建插入一条实体的SQL 标签
-     *
-     * @param insertModel
-     * @param tableName
-     * @return
-     */
-    private Element createInsertModel(String insertModel, String tableName) {
-        XmlElement insertElement = new XmlElement("insert");
-        insertElement.addAttribute(new Attribute("id", insertModel));
-        String str = String.format("INSERT INTO %s(<include refid=\"sqlColumns\" />) \n" +
-                "      VALUES(<include refid=\"sqlInsertModel\"/>)", tableName);
-        insertElement.addElement(new TextElement(str));
-        return insertElement;
-    }
-
-    /**
-     * 创建一条SQL，用于查询。通过过滤条件查询。
-     *
-     * @param selectId
-     * @param tableName
-     * @return
-     */
-    private Element createSelectByFilter(String selectId, String tableName) {
-        XmlElement select = new XmlElement("select");
-        select.addAttribute(new Attribute("id", selectId));
-        select.addAttribute(new Attribute("resultMap", "BaseResultMap"));
-
-        String selectSb = "SELECT <include refid=\"sqlColumns\" />\n" +
-                String.format("    FROM %s \n", tableName) +
-                "    <include refid=\"sqlWhereFilter\" />\n";
-        select.addElement(new TextElement(selectSb));
-        return select;
-    }
-
-    /**
-     * 公共SQL
-     *
-     * @param id
-     * @param sqlStr
-     * @return
-     */
-    private XmlElement createSql(String id, String sqlStr) {
-        XmlElement sql = new XmlElement("sql");
-        sql.addAttribute(new Attribute("id", id));
-        sql.addElement(new TextElement(sqlStr));
-        return sql;
-    }
-
-
-    /**
-     * 查询
-     *
-     * @param id
-     * @param tableName
-     * @param pkColumn
-     * @return
-     */
-    private XmlElement createSelect(String id, String tableName, IntrospectedColumn pkColumn) {
-        XmlElement select = new XmlElement("select");
-        select.addAttribute(new Attribute("id", id));
-        select.addAttribute(new Attribute("resultMap", "BaseResultMap"));
-        StringBuilder selectStr = new StringBuilder("select <include refid=\"sqlColumns\" /> from ")
-                .append(tableName);
-        if (null != pkColumn) {
-            selectStr.append(" where ")
-                    .append(pkColumn.getActualColumnName())
-                    .append(" = #{")
-                    .append(pkColumn.getJavaProperty())
-                    .append("}");
-        } else {
-            selectStr.append(" <include refid=\"sqlWhereFilter\" />");
-        }
-        if ("selectPage".equals(id)) {
-            selectStr.append(" limit #{page.startRow}, #{page.pageSize}");
-        }
-        select.addElement(new TextElement(selectStr.toString()));
-        return select;
-    }
-
-    /**
-     * 保存
-     *
-     * @param id
-     * @param pkColumn
-     * @return
-     */
-    private XmlElement createSave(String id, IntrospectedColumn pkColumn) {
-        XmlElement save = new XmlElement("insert");
-        save.addAttribute(new Attribute("id", id));
-        if (null != pkColumn) {
-            save.addAttribute(new Attribute("keyProperty", "model." + pkColumn.getJavaProperty()));
-            save.addAttribute(new Attribute("useGeneratedKeys", "true"));
-            save.addElement(new TextElement("<include refid=\"sql_save_columns\" /><include refid=\"sql_save_values\" />"));
-        } else {
-            StringBuilder saveStr = new StringBuilder(
-                    "<foreach collection=\"list\" index=\"index\" model=\"model\" open=\"\" separator=\";\" close=\"\">\n    ")
-                    .append("<include refid=\"sql_save_columns\" /><include refid=\"sql_save_values\" />\n  </foreach>");
-            save.addElement(new TextElement(saveStr.toString()));
-        }
-        return save;
-    }
-
-    /**
-     * 更新
-     *
-     * @param id
-     * @return
-     */
-    private XmlElement createUpdate(String id) {
-        XmlElement update = new XmlElement("update");
-        update.addAttribute(new Attribute("id", id));
-        if ("update".equals(id)) {
-            update.addElement(new TextElement("<include refid=\"sql_update\" />"));
-        } else {
-            update.addElement(new TextElement(
-                    "<foreach collection=\"list\" index=\"index\" model=\"model\" open=\"\" " +
-                            "separator=\";\" close=\"\">\n   " +
-                            " <include refid=\"sql_update\" />\n  </foreach>"));
-        }
-        return update;
-    }
-
-    /**
-     * 删除
-     *
-     * @param tableName
-     * @param pkColumn
-     * @param method
-     * @param type
-     * @return
-     */
-    private XmlElement createDels(String tableName, IntrospectedColumn pkColumn, String method, String type) {
-        XmlElement delete = new XmlElement("delete");
-        delete.addAttribute(new Attribute("id", method));
-        StringBuilder deleteStr = new StringBuilder("delete from ")
-                .append(tableName)
-                .append(" where ")
-                .append(pkColumn.getActualColumnName())
-                .append(" in\n  ")
-                .append("<foreach collection=\"")
-                .append(type)
-                .append("\" index=\"index\" model=\"model\" open=\"(\" separator=\",\" close=\")\">#{model}</foreach>");
-        delete.addElement(new TextElement(deleteStr.toString()));
-        return delete;
+        return whereFilterElement;
     }
 
     @Override
