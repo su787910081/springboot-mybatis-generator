@@ -24,21 +24,21 @@ import java.util.*;
 public class MappersPlugin extends PluginAdapter {
 
     private static final String PRO_MAPPERS = "mappers";
-    private static final String PRO_FILTER = "filter";
 
     private String dateFormat = Constans.DEFAULT_DATE_FORMAT;
     private String javaFileEncoding;
-
 
     private static final FullyQualifiedJavaType simpleMapperType;
     private static final FullyQualifiedJavaType filterMapperType;
 
     static {
         simpleMapperType = new FullyQualifiedJavaType(SimpleMapper.class.getCanonicalName());
-        filterMapperType = new FullyQualifiedJavaType(FilterMapper.class.getCanonicalName());
+        filterMapperType = new FullyQualifiedJavaType(LikeMapper.class.getCanonicalName());
     }
 
-    //    private final Set<String> mappers = new HashSet<>();
+    // 配置文件中配置好的需要添加的注解
+    private final Set<AnnotationEnum> annotations = new HashSet<>();
+
     private final Set<FullyQualifiedJavaType> mapperTypes = new HashSet<>();
     // 过滤器实体，模糊查询时必须要true
     private boolean filterEntity = false;
@@ -77,13 +77,19 @@ public class MappersPlugin extends PluginAdapter {
     public void setProperties(Properties properties) {
         super.setProperties(properties);
 
-        String mappers = this.properties.getProperty(PRO_MAPPERS);
+        String mappers = (String) this.properties.getOrDefault(PRO_MAPPERS, "");
         for (String m : mappers.split(",")) {
-            mapperTypes.add(new FullyQualifiedJavaType(m));
+            if (!StringUtils.isEmpty(m)) {
+                mapperTypes.add(new FullyQualifiedJavaType(m));
+            }
         }
         if (mapperTypes.contains(filterMapperType)) {
             // 模糊查询时必须要实现这个实体类
             filterEntity = true;
+        }
+        String bEnable = (String) properties.getOrDefault(Constans.ANN_SWAGGER, "false");
+        if ("true".equals(bEnable)) {
+            annotations.add(AnnotationEnum.SWAGGER);
         }
     }
 
@@ -111,9 +117,9 @@ public class MappersPlugin extends PluginAdapter {
         String modelName = introspectedTable.getBaseRecordType();
         FullyQualifiedJavaType modelType = new FullyQualifiedJavaType(modelName);
         String shortModelName = modelType.getShortName();
-        String filterName = modelName + "Filter";
-        FullyQualifiedJavaType filterType = new FullyQualifiedJavaType(filterName);
-        String shortFilterName = filterType.getShortName();
+
+        // import实体类
+        interfaze.addImportedType(modelType);
 
         // import接口
         if (mapperTypes.contains(simpleMapperType)) {
@@ -123,6 +129,11 @@ public class MappersPlugin extends PluginAdapter {
             interfaze.addImportedType(simpleMapperType);
         }
         if (mapperTypes.contains(filterMapperType)) {
+            // 过滤器类
+            String filterName = getFilterClassShortName(modelName);
+            FullyQualifiedJavaType filterType = new FullyQualifiedJavaType(filterName);
+            String shortFilterName = filterType.getShortName();
+
             String shortName = filterMapperType.getShortName();
             String superClass = String.format("%s<%s, %s>",
                     shortName, shortModelName, shortFilterName);
@@ -130,8 +141,7 @@ public class MappersPlugin extends PluginAdapter {
             interfaze.addImportedType(filterType);
             interfaze.addImportedType(filterMapperType);
         }
-        // import实体类
-        interfaze.addImportedType(modelType);
+
 
         return true;
     }
@@ -273,21 +283,30 @@ public class MappersPlugin extends PluginAdapter {
         FullyQualifiedJavaType superClassType = new FullyQualifiedJavaType(entityClazzType);
 
         // 拼接完整类名
+        String fullyQualifiedName = filterMapperType.getFullyQualifiedName();
+
+        String filterShortName = getFilterClassShortName(modelClassName);
+
         TopLevelClass filterClass = new TopLevelClass(
-                String.format("%s.%sFilter", basePackage, modelClassName));
+                String.format("%s.%s", basePackage, filterShortName));
 
         filterClass.setSuperClass(superClassType);
         filterClass.setVisibility(JavaVisibility.PUBLIC);
 
         FullyQualifiedJavaType modelJavaType = new FullyQualifiedJavaType(entityClazzType);
         filterClass.addImportedType(modelJavaType);
-        for (String str : AnnotationEnum.SWAGGER.getImportEntities()) {
-            filterClass.addImportedType(str);
+
+        String remarksTable = introspectedTable.getRemarks();
+        String remarkModel = remarksTable + " 模糊查询实体";
+        if (annotations.contains(AnnotationEnum.SWAGGER)) {
+            for (String str : AnnotationEnum.SWAGGER.getImportEntities()) {
+                filterClass.addImportedType(str);
+            }
+            filterClass.addAnnotation("@ApiModel(value = \"" + remarkModel + "\")");
         }
-        filterClass.addAnnotation("@ApiModel");
 
         filterClass.addJavaDocLine("/**");
-        filterClass.addJavaDocLine(" * 实体过滤器类");
+        filterClass.addJavaDocLine(" * " + remarkModel);
         filterClass.addJavaDocLine(" *");
         filterClass.addJavaDocLine(" * @author " + getCurUser());
         filterClass.addJavaDocLine(" * @date " + getDateString());
@@ -306,6 +325,20 @@ public class MappersPlugin extends PluginAdapter {
         }
 
         return filterClass;
+    }
+
+    /**
+     * 过滤器类，是在实体类的类名后面添加一个 Filter 字符串
+     *
+     * @param modelShortName
+     * @return
+     */
+    private String getFilterClassShortName(String modelShortName) {
+        if (StringUtils.isEmpty(modelShortName)) {
+            return null;
+        }
+
+        return modelShortName + "Filter";
     }
 
     /**
