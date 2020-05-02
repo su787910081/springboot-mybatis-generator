@@ -7,6 +7,8 @@ import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.config.Context;
+import org.mybatis.generator.config.PropertyRegistry;
+import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,7 +18,7 @@ public class AnnotationPlugin extends PluginAdapter {
     // 所有支持的注解，这个注解在配置文件中使用。要与这些字符串做比较。
     private final static String ANN_SWAGGER = "ann_swagger";
     private final static String ANN_DATE = "ann_format_date";
-    private static final String PRO_DATE_FORMAT = "dateFormat";
+//    private static final String PRO_DATE_FORMAT = "dateFormat";
 
     private final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -44,6 +46,11 @@ public class AnnotationPlugin extends PluginAdapter {
     @Override
     public void initialized(IntrospectedTable introspectedTable) {
         super.initialized(introspectedTable);
+
+        Context context = introspectedTable.getContext();
+        if (StringUtils.isEmpty(dateFormat)) {
+            dateFormat = context.getProperty(Constans.PRO_DATE_FORMAT);
+        }
     }
 
     /**
@@ -56,7 +63,9 @@ public class AnnotationPlugin extends PluginAdapter {
     public void setProperties(Properties properties) {
         super.setProperties(properties);
 
-        dateFormat = (String) properties.getOrDefault(PRO_DATE_FORMAT, DEFAULT_DATE_FORMAT);
+        if (!StringUtils.isEmpty(dateFormat)) {
+            dateFormat = (String) properties.getOrDefault(ANN_DATE, DEFAULT_DATE_FORMAT);
+        }
 
         // 初始化支持的所有注解
         String bEnable = null;

@@ -37,7 +37,7 @@
             <!-- 自定义配置属性  -->
             <property name="ann_swagger" value="true"/>
             <property name="ann_format_date" value="true"/>
-<!--            <property name="dateFormat" value="yyyy-MM-dd"/>-->
+            <property name="dateFormat" value="yyyy-MM-dd"/>
         </plugin>
         <plugin type="com.suyh.version03.plugin.custom.CommentPlugin">
             <!-- 自定义配置属性  -->
@@ -47,12 +47,6 @@
         <!-- 自定义插件生成，可以参考博客：https://blog.csdn.net/u011781521/article/details/78695396 -->
         <plugin type="com.suyh.version03.plugin.custom.BaseMapperPlugin">
             <property name="mappers" value="com.suyh.version03.plugin.custom.BaseMapper"/>
-
-            <!-- 自定义配置属性  -->
-            <property name="swagger" value="true"/>
-            <property name="format_date" value="true"/>
-<!--            <property name="dateFormat" value="yyyy-MM-dd"/>-->
-            <property name="author" value="suyh"/>
         </plugin>
 
 

@@ -78,7 +78,6 @@ public class FilterEntityPlugin extends PluginAdapter {
     private CompilationUnit generateFilterEntity(IntrospectedTable introspectedTable, String basePackage) {
         // suyh: 这里可以得到实体类的完整类名
         String entityClazzType = introspectedTable.getBaseRecordType();
-        String destPackage = basePackage + ".filter";
 
         // 这里可以得到实体类的短名，仅类名：  CrmCustomerInfo
         String modelClassName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
@@ -88,7 +87,7 @@ public class FilterEntityPlugin extends PluginAdapter {
 
         // 拼接完整类名
         TopLevelClass filterClass = new TopLevelClass(
-                String.format("%s.%sFilter", destPackage, modelClassName));
+                String.format("%s.%sFilter", basePackage, modelClassName));
 
         filterClass.setSuperClass(superClassType);
         filterClass.setVisibility(JavaVisibility.PUBLIC);
@@ -102,8 +101,6 @@ public class FilterEntityPlugin extends PluginAdapter {
         filterClass.addJavaDocLine(" * @author " + getCurUser());
         filterClass.addJavaDocLine(" * @date " + getCurDate());
         filterClass.addJavaDocLine(" */");
-
-        // 添加字段
 
         List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
         for (IntrospectedColumn introspectedColumn : allColumns) {
