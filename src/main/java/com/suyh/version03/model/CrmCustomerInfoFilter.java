@@ -9,7 +9,7 @@ import java.util.Date;
  * 实体过滤器类
  *
  * @author suyh
- * @date 2020-05-02 17:23:52
+ * @date 2020-05-02 18:23:44
  */
 @ApiModel
 public class CrmCustomerInfoFilter extends CrmCustomerInfo {

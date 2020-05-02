@@ -14,7 +14,7 @@ import org.mybatis.generator.config.Context;
 
 import java.util.*;
 
-public class BaseMapperPlugin extends PluginAdapter {
+public class MappersPlugin extends PluginAdapter {
 
     private static final String PRO_MAPPERS = "mappers";
 

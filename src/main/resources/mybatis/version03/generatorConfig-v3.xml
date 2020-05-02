@@ -46,8 +46,8 @@
         </plugin>
         <!-- 通过自定义插件类生成自定义注解和接口 -->
         <!-- 自定义插件生成，可以参考博客：https://blog.csdn.net/u011781521/article/details/78695396 -->
-        <plugin type="com.suyh.version03.plugin.custom.BaseMapperPlugin">
-            <property name="mappers" value="com.suyh.version03.plugin.custom.BaseMapper"/>
+        <plugin type="com.suyh.version03.plugin.custom.MappersPlugin">
+            <property name="mappers" value="com.suyh.version03.plugin.custom.SimpleMapper"/>
         </plugin>
 
         <!--数据库链接地址账号密码-->

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Mybatis基础DAO
  */
-public interface BaseMapper<T> {
+public interface SimpleMapper<T> {
     /**
      * 过滤查询
      * @param filter
