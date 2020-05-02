@@ -1,6 +1,5 @@
 package com.suyh.version03.custom;
 
-import com.suyh.version01.custom.CustomCommentGenerator;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
