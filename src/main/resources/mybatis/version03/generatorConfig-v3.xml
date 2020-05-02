@@ -78,7 +78,7 @@
 
         <!-- 生成mapxml文件 -->
         <!-- 这个目录必须存在，若不存在则不会生成对应的文件 -->
-        <sqlMapGenerator targetPackage="version03/mapper" targetProject="src/main/resources/mybatis">
+        <sqlMapGenerator targetPackage="mybatis/version03/mapper" targetProject="src/main/resources/">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
@@ -106,6 +106,21 @@
                enableUpdateByPrimaryKey="false">
             <!-- 主键生成方式 -->
             <!--            <generatedKey column="customer_id" sqlStatement="Mysql" identity="true"/>-->
+        </table>
+
+        <!-- 结算信息表结构 -->
+        <table tableName="crm_settle_money_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true"
+
+               enableDeleteByPrimaryKey="true"
+               enableInsert="true"
+               enableSelectByPrimaryKey="true"
+
+               enableUpdateByPrimaryKey="false">
         </table>
 
     </context>
