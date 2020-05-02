@@ -47,6 +47,9 @@
             <property name="dateFormat" value="yyyy-MM-dd"/>
             <property name="author" value="suyh"/>
         </plugin>
+        <plugin type="com.suyh.version03.plugin.custom.FilterEntityPlugin">
+            <!-- 尝试添加一个自己的实体类 -->
+        </plugin>
 
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
