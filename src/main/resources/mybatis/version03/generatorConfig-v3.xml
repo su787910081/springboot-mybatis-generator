@@ -123,6 +123,21 @@
                enableUpdateByPrimaryKey="false">
         </table>
 
+        <!-- 联系人信息 -->
+        <table tableName="crm_contacts_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true"
+
+               enableDeleteByPrimaryKey="true"
+               enableInsert="true"
+               enableSelectByPrimaryKey="true"
+
+               enableUpdateByPrimaryKey="false">
+        </table>
+
     </context>
 
 </generatorConfiguration>
