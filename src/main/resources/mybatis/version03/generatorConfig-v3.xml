@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- 加载配置文件，为下面读取数据库信息准备  居然不能正确读取到 application.yml 文件 -->
+    <properties resource="application.properties"/>
+
+    <!-- 指定数据库驱动的jdbc驱动jar包的位置 -->
+    <!-- 不再需要，因为 jar 包已经在 classpath 中
+    <classPathEntry location="./mysql-connector-java-5.1.40.jar" />
+    -->
+
+    <!-- defaultModelType="flat" 大数据字段，不分表 -->
+    <context id="suyh" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <!-- 生成的 Java 文件的编码 -->
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 格式化 Java 代码 -->
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <!-- 格式化 XML 代码 -->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+
+        <!-- 生成的entity，将implements Serializable -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="com.suyh.version03.custom.AnnotationPlugin">
+            <!-- 自定义配置属性  -->
+            <property name="swagger" value="true"/>
+            <property name="format_date" value="true"/>
+            <property name="dateFormat" value="yyyy-MM-dd"/>
+        </plugin>
+        <plugin type="com.suyh.version03.custom.CommentPlugin">
+            <!-- 自定义配置属性  -->
+            <property name="author" value="suyh"/>
+        </plugin>
+        <!-- 通过自定义插件类生成自定义注解和接口 -->
+        <!-- 自定义插件生成，可以参考博客：https://blog.csdn.net/u011781521/article/details/78695396 -->
+<!--        <plugin type="com.suyh.version03.custom.GenPlugin">-->
+<!--            <property name="mappers" value="com.suyh.version03.custom.BaseMapper"/>-->
+
+<!--            &lt;!&ndash; 自定义配置属性  &ndash;&gt;-->
+<!--            <property name="swagger" value="true"/>-->
+<!--            <property name="format_date" value="true"/>-->
+<!--            <property name="dateFormat" value="yyyy-MM-dd"/>-->
+<!--            <property name="author" value="suyh"/>-->
+<!--        </plugin>-->
+
+        <!--数据库链接地址账号密码-->
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@docker:1521:XE"
+                        userId="AfterSales"
+                        password="oracle_pwd">
+            <!-- 对实体类添加注释映射到表的注释 -->
+            <!-- 设置 useInformationSchema 属性为 true -->
+            <property name="useInformationSchema" value="true"/>
+            <!-- 针对oracle数据库，指定数据库为ORACLE 时如果没有这个配置，则注释拿不到的。 -->
+            <property name="remarksReporting" value="true"/>
+        </jdbcConnection>
+
+        <!-- 类型转换 -->
+        <javaTypeResolver>
+            <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer
+            true，把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
+            <!-- 测试了一下，这个地方填false 还是比较好的 -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- 生成实体的位置 -->
+        <javaModelGenerator targetPackage="com.suyh.version03.model" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <!-- 在实体类的set 方法中直接trim() -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成mapxml文件 -->
+        <!-- 这个目录必须存在，若不存在则不会生成对应的文件 -->
+        <sqlMapGenerator targetPackage="version03/mapper" targetProject="src/main/resources/mybatis">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- 生成 Mapper XML 的位置 -->
+        <javaClientGenerator targetPackage="com.suyh.version03.mapper"
+                             type="XMLMAPPER" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+
+        <!-- 需要生成的实体类对应的表名，多个实体类复制多份该配置即可 -->
+        <!-- 每一个table 标签对应数据库中的一张表 -->
+        <!-- 客户/供应商基本信息表结构 -->
+        <table tableName="crm_customer_info"
+               enableCountByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               selectByExampleQueryId="true"
+
+               enableDeleteByPrimaryKey="true"
+               enableInsert="true"
+               enableSelectByPrimaryKey="true"
+
+               enableUpdateByPrimaryKey="false">
+            <!-- 主键生成方式 -->
+            <!--            <generatedKey column="customer_id" sqlStatement="Mysql" identity="true"/>-->
+        </table>
+
+    </context>
+
+</generatorConfiguration>
