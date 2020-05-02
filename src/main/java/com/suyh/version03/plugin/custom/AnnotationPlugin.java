@@ -7,20 +7,12 @@ import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.PropertyRegistry;
 import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class AnnotationPlugin extends PluginAdapter {
-
-    // 所有支持的注解，这个注解在配置文件中使用。要与这些字符串做比较。
-    private final static String ANN_SWAGGER = "ann_swagger";
-    private final static String ANN_DATE = "ann_format_date";
-//    private static final String PRO_DATE_FORMAT = "dateFormat";
-
-    private final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     private String dateFormat = "";
 
@@ -64,16 +56,16 @@ public class AnnotationPlugin extends PluginAdapter {
         super.setProperties(properties);
 
         if (!StringUtils.isEmpty(dateFormat)) {
-            dateFormat = (String) properties.getOrDefault(ANN_DATE, DEFAULT_DATE_FORMAT);
+            dateFormat = (String) properties.getOrDefault(Constans.ANN_DATE, Constans.DEFAULT_DATE_FORMAT);
         }
 
         // 初始化支持的所有注解
         String bEnable = null;
-        bEnable = (String) properties.getOrDefault(ANN_DATE, "false");
+        bEnable = (String) properties.getOrDefault(Constans.ANN_DATE, "false");
         if ("true".equals(bEnable)) {
             annotations.add(AnnotationEnum.JSON_DATE);
         }
-        bEnable = (String) properties.getOrDefault(ANN_SWAGGER, "false");
+        bEnable = (String) properties.getOrDefault(Constans.ANN_SWAGGER, "false");
         if ("true".equals(bEnable)) {
             annotations.add(AnnotationEnum.SWAGGER);
         }
@@ -156,9 +148,6 @@ public class AnnotationPlugin extends PluginAdapter {
         return true;
     }
 
-    protected String getDateString() {
-        SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-        return sdf.format(new Date());
-    }
+
 
 }

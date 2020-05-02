@@ -1,19 +1,22 @@
 package com.suyh.version03.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 
 /**
  * 实体过滤器类
  *
  * @author suyh
- * @date 2020-05-02 17:02:43
+ * @date 2020-05-02 17:23:52
  */
+@ApiModel
 public class CrmCustomerInfoFilter extends CrmCustomerInfo {
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createdDateBefore;
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createdDateAfter;
 
     public Date getCreatedDateBefore() {

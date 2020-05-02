@@ -1,6 +1,9 @@
 package com.suyh.version03.plugin.custom;
 
-import org.mybatis.generator.api.*;
+import org.mybatis.generator.api.GeneratedJavaFile;
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.IntrospectedTable;
+import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
@@ -18,8 +21,7 @@ import java.util.List;
  */
 public class FilterEntityPlugin extends PluginAdapter {
 
-    private final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private String dateFormat = DEFAULT_DATE_FORMAT;
+    private String dateFormat = Constans.DEFAULT_DATE_FORMAT;
     private String javaFileEncoding;
 
     @Override
@@ -32,7 +34,6 @@ public class FilterEntityPlugin extends PluginAdapter {
         super.initialized(introspectedTable);
 
         Context context = introspectedTable.getContext();
-        dateFormat = context.getProperty(Constans.PRO_DATE_FORMAT);
         javaFileEncoding = context.getProperty(PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING);
     }
 
@@ -94,12 +95,16 @@ public class FilterEntityPlugin extends PluginAdapter {
 
         FullyQualifiedJavaType modelJavaType = new FullyQualifiedJavaType(entityClazzType);
         filterClass.addImportedType(modelJavaType);
+        for (String str : AnnotationEnum.SWAGGER.getImportEntities()) {
+            filterClass.addImportedType(str);
+        }
+        filterClass.addAnnotation("@ApiModel");
 
         filterClass.addJavaDocLine("/**");
         filterClass.addJavaDocLine(" * 实体过滤器类");
         filterClass.addJavaDocLine(" *");
         filterClass.addJavaDocLine(" * @author " + getCurUser());
-        filterClass.addJavaDocLine(" * @date " + getCurDate());
+        filterClass.addJavaDocLine(" * @date " + getDateString());
         filterClass.addJavaDocLine(" */");
 
         List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
@@ -167,8 +172,8 @@ public class FilterEntityPlugin extends PluginAdapter {
         return method;
     }
 
-    private String getCurDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    protected String getDateString() {
+        SimpleDateFormat sdf = new SimpleDateFormat(Constans.DEFAULT_DATE_FORMAT);
         return sdf.format(new Date());
     }
 

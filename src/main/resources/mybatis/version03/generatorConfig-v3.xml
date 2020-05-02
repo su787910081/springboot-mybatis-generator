@@ -31,7 +31,9 @@
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
         <plugin type="com.suyh.version03.plugin.custom.FilterEntityPlugin">
-            <!-- 尝试添加一个自己的实体类 -->
+            <!-- 在这个filter 中要添加哪些注解 -->
+            <property name="ann_swagger" value="true"/>
+            <property name="ann_format_date" value="true"/>
         </plugin>
         <plugin type="com.suyh.version03.plugin.custom.AnnotationPlugin">
             <!-- 自定义配置属性  -->
