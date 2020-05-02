@@ -1,5 +1,6 @@
 package com.suyh.version03.custom;
 
+import com.suyh.version01.custom.CustomCommentGenerator;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
@@ -29,10 +30,10 @@ public class CommentPlugin extends PluginAdapter {
     @Override
     public void setContext(Context context) {
         super.setContext(context);
-        // 设置自定义的注释生成器: GenCommentGenerator
+        // 设置自定义的注释生成器:
         // 注释生成器
         CommentGeneratorConfiguration commentCfg = new CommentGeneratorConfiguration();
-        commentCfg.setConfigurationType(GenCommentGenerator.class.getCanonicalName());
+        commentCfg.setConfigurationType(CustomCommentGenerator.class.getCanonicalName());
         context.setCommentGeneratorConfiguration(commentCfg);
     }
 

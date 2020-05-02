@@ -108,7 +108,8 @@ public class CustomCommentGenerator implements CommentGenerator {
             innerClass.addJavaDocLine(" */");
         }
     }
-
+	
+    @Override
     public void addClassComment(
             InnerClass innerClass,
             IntrospectedTable introspectedTable,
@@ -125,6 +126,7 @@ public class CustomCommentGenerator implements CommentGenerator {
         }
     }
 
+    @Override
     public void addModelClassComment(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         if (!this.suppressAllComments && this.addRemarkComments) {
             topLevelClass.addJavaDocLine("/**");
@@ -138,6 +140,7 @@ public class CustomCommentGenerator implements CommentGenerator {
         }
     }
 
+    @Override
     public void addEnumComment(InnerEnum innerEnum, IntrospectedTable introspectedTable) {
         if (!this.suppressAllComments) {
             StringBuilder sb = new StringBuilder();
@@ -192,7 +195,8 @@ public class CustomCommentGenerator implements CommentGenerator {
             field.addJavaDocLine(" */");
         }
     }
-
+	
+    @Override
     public void addGeneralMethodComment(Method method, IntrospectedTable introspectedTable) {
 //        if (!this.suppressAllComments) {
 //            StringBuilder sb = new StringBuilder();
@@ -206,7 +210,8 @@ public class CustomCommentGenerator implements CommentGenerator {
 //        }
     }
 
-    public void addGetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
+    public void addGetterComment(Method method, IntrospectedTable introspectedTable,
+                                 IntrospectedColumn introspectedColumn) {
 //        if (!this.suppressAllComments) {
 //            StringBuilder sb = new StringBuilder();
 //            method.addJavaDocLine("/**");
