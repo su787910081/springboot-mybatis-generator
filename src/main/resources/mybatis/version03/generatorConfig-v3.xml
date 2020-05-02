@@ -25,7 +25,7 @@
 
         <!-- 自定义属性 -->
         <!-- 自定义属性: 日期格式化 -->
-        <property name="dateFormat" value="yyyy-MM-dd"/>
+        <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
 
         <!-- 生成的entity，将implements Serializable -->
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
@@ -37,7 +37,6 @@
             <!-- 自定义配置属性  -->
             <property name="ann_swagger" value="true"/>
             <property name="ann_format_date" value="true"/>
-            <property name="dateFormat" value="yyyy-MM-dd"/>
         </plugin>
         <plugin type="com.suyh.version03.plugin.custom.CommentPlugin">
             <!-- 自定义配置属性  -->
@@ -48,7 +47,6 @@
         <plugin type="com.suyh.version03.plugin.custom.BaseMapperPlugin">
             <property name="mappers" value="com.suyh.version03.plugin.custom.BaseMapper"/>
         </plugin>
-
 
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
