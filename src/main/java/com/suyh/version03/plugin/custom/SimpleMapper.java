@@ -13,7 +13,7 @@ public interface SimpleMapper<T> {
      * @param filter
      * @return
      */
-    List<T> selectByFilter(@Param("filter") T filter);
+    List<T> selectModelByFilter(@Param("filter") T filter);
 
     /**
      * 更新记录，指定过滤条件

@@ -10,6 +10,6 @@ public interface FilterMapper<Model, Filter> {
      * @param filter
      * @return
      */
-    List<Model> selectByFilterLike(@Param("filter") Filter filter);
+    List<Model> selectModelByFilterLike(@Param("filter") Filter filter);
 
 }

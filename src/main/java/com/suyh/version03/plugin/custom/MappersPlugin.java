@@ -16,6 +16,11 @@ import org.springframework.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * mapper 插件由我现在的理解，有且仅有一个为好。
+ * 如果有两个的话，那一个表生成两个mapper 接口文件吗？
+ * 这样似乎不行的呀。
+ */
 public class MappersPlugin extends PluginAdapter {
 
     private static final String PRO_MAPPERS = "mappers";
