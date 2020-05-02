@@ -43,9 +43,9 @@
         <!-- 自定义插件生成，可以参考博客：https://blog.csdn.net/u011781521/article/details/78695396 -->
         <plugin type="com.suyh.version03.plugin.custom.MappersPlugin">
             <!-- 这两个mapper 接口类是我提供并实现的。要添加的话，必须要实现对应的SQL XML 代码 -->
-<!--            <property name="mappers" value="com.suyh.version03.plugin.custom.SimpleMapper,com.suyh.version03.plugin.custom.LikeMapper"/>-->
-<!--            &lt;!&ndash; 添加swagger 注解 &ndash;&gt;-->
-<!--            <property name="ann_swagger" value="true"/>-->
+            <property name="mappers" value="com.suyh.version03.plugin.custom.SimpleMapper,com.suyh.version03.plugin.custom.LikeMapper"/>
+            <!-- 添加swagger 注解 -->
+            <property name="ann_swagger" value="true"/>
         </plugin>
 
         <!--数据库链接地址账号密码-->

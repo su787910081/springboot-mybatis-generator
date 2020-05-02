@@ -283,8 +283,6 @@ public class MappersPlugin extends PluginAdapter {
         FullyQualifiedJavaType superClassType = new FullyQualifiedJavaType(entityClazzType);
 
         // 拼接完整类名
-        String fullyQualifiedName = filterMapperType.getFullyQualifiedName();
-
         String filterShortName = getFilterClassShortName(modelClassName);
 
         TopLevelClass filterClass = new TopLevelClass(
