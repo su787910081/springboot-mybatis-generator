@@ -1,4 +1,4 @@
-package com.suyh.version03.custom;
+package com.suyh.version03.plugin.custom;
 
 import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedColumn;
@@ -10,11 +10,8 @@ import org.mybatis.generator.api.dom.xml.Document;
 import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
-import org.mybatis.generator.config.CommentGeneratorConfiguration;
 import org.mybatis.generator.config.Context;
-import org.mybatis.generator.internal.util.StringUtility;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class BaseMapperPlugin extends PluginAdapter {

@@ -1,7 +1,7 @@
 package com.suyh.version03.mapper;
 
-import com.suyh.version03.custom.BaseMapper;
 import com.suyh.version03.model.CrmCustomerInfo;
+import com.suyh.version03.plugin.custom.BaseMapper;
 import java.util.List;
 
 public interface CrmCustomerInfoMapper extends BaseMapper<CrmCustomerInfo> {

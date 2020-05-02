@@ -1,4 +1,4 @@
-package com.suyh.version03.custom;
+package com.suyh.version03.plugin.custom;
 
 import org.apache.ibatis.annotations.Param;
 
