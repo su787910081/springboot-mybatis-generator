@@ -30,11 +30,11 @@
         <!-- 生成的entity，将implements Serializable -->
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
-        <plugin type="com.suyh.version03.plugin.custom.FilterEntityPlugin">
-            <!-- 在这个filter 中要添加哪些注解 -->
-            <property name="ann_swagger" value="true"/>
-            <property name="ann_format_date" value="true"/>
-        </plugin>
+<!--        <plugin type="com.suyh.version03.plugin.custom.FilterEntityPlugin">-->
+<!--            &lt;!&ndash; 在这个filter 中要添加哪些注解 &ndash;&gt;-->
+<!--            <property name="ann_swagger" value="true"/>-->
+<!--            <property name="ann_format_date" value="true"/>-->
+<!--        </plugin>-->
         <plugin type="com.suyh.version03.plugin.custom.AnnotationPlugin">
             <!-- 自定义配置属性  -->
             <property name="ann_swagger" value="true"/>
@@ -47,7 +47,9 @@
         <!-- 通过自定义插件类生成自定义注解和接口 -->
         <!-- 自定义插件生成，可以参考博客：https://blog.csdn.net/u011781521/article/details/78695396 -->
         <plugin type="com.suyh.version03.plugin.custom.MappersPlugin">
-            <property name="mappers" value="com.suyh.version03.plugin.custom.SimpleMapper"/>
+            <property name="mappers" value="com.suyh.version03.plugin.custom.SimpleMapper,com.suyh.version03.plugin.custom.FilterMapper"/>
+            <!-- 模糊查询时必须要加这个 -->
+            <property name="filter" value="true"/>
         </plugin>
 
         <!--数据库链接地址账号密码-->
