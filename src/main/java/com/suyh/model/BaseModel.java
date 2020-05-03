@@ -1,4 +1,4 @@
-package com.suyh.version03.plugin.custom.model;
+package com.suyh.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

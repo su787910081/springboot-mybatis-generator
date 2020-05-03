@@ -1,5 +1,7 @@
 package com.suyh.version03.plugin.custom.mapper;
 
+import com.suyh.mapper.LikeMapper;
+import com.suyh.mapper.SimpleMapper;
 import com.suyh.version03.plugin.custom.constants.Constants;
 import com.suyh.version03.plugin.custom.annotation.AnnotationEnum;
 import org.mybatis.generator.api.*;

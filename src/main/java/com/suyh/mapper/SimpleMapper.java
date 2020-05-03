@@ -1,4 +1,4 @@
-package com.suyh.version03.plugin.custom.mapper;
+package com.suyh.mapper;
 
 import org.apache.ibatis.annotations.Param;
 
