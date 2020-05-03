@@ -117,7 +117,7 @@
                enableSelectByPrimaryKey="true"
 
                enableUpdateByPrimaryKey="false">
-            <property name="rootClass" value="com.suyh.version03.plugin.custom.model.BaseModel"/>
+            <property name="rootClass" value="com.suyh.model.BaseModel"/>
             <!-- 主键生成方式 -->
             <!--            <generatedKey column="customer_id" sqlStatement="Mysql" identity="true"/>-->
         </table>

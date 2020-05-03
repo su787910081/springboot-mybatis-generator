@@ -540,7 +540,7 @@ public class MappersPlugin extends PluginAdapter {
             String ifString = "";   // 字符串类型要多处理一个''
             if (PrimitiveTypeWrapper.getStringInstance().equals(javaType)) {
                 // 字符串才会做 空字符串的判断。其他类型不能做这个比较。否则会报错
-                ifString = String.format("and '' != model.%s", javaProperty);
+                ifString = String.format("and '' != filter.%s", javaProperty);
             }
 
             XmlElement ifFilterPropertyElement = new XmlElement("if");
@@ -618,7 +618,7 @@ public class MappersPlugin extends PluginAdapter {
         // 字符串字段的模糊查询。字符串的拼接要分mysql 和oracle了。
         XmlElement ifLikePropertyElement = new XmlElement("if");
         String ifPropertyValue = String.format(
-                "null != filter.%s and '' != model.%s", javaProperty, javaProperty);
+                "null != filter.%s and '' != filter.%s", javaProperty, javaProperty);
         ifLikePropertyElement.addAttribute(new Attribute("test", ifPropertyValue));
 
         String content = null;
