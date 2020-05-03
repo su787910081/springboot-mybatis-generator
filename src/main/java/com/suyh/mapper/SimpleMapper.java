@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * 一个基本的 mapper 实现。
  * 就是添加过滤查询和过滤更新
+ * 完全匹配
  */
 public interface SimpleMapper<T> {
     /**
