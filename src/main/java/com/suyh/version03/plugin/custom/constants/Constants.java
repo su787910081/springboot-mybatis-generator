@@ -1,4 +1,4 @@
-package com.suyh.version03.plugin.custom;
+package com.suyh.version03.plugin.custom.constants;
 
 public class Constants {
     public static final String PRO_DATE_FORMAT = "dateFormat";

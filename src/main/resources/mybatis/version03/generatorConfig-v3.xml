@@ -33,21 +33,21 @@
 
         <!-- 生成的entity，将implements Serializable -->
 <!--        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>-->
-        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
-        <plugin type="com.suyh.version03.plugin.custom.AnnotationPlugin">
+<!--        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>-->
+        <plugin type="com.suyh.version03.plugin.custom.annotation.AnnotationPlugin">
             <!-- 自定义配置属性  -->
             <property name="ann_swagger" value="true"/>
             <property name="ann_format_date" value="true"/>
         </plugin>
-        <plugin type="com.suyh.version03.plugin.custom.CommentPlugin">
+        <plugin type="com.suyh.version03.plugin.custom.comment.CommentPlugin">
             <!-- 自定义配置属性  -->
             <property name="author" value="suyh"/>
         </plugin>
         <!-- 通过自定义插件类生成自定义注解和接口 -->
         <!-- 自定义插件生成，可以参考博客：https://blog.csdn.net/u011781521/article/details/78695396 -->
-        <plugin type="com.suyh.version03.plugin.custom.MappersPlugin">
+        <plugin type="com.suyh.version03.plugin.custom.mapper.MappersPlugin">
             <!-- 这两个mapper 接口类是我提供并实现的。要添加的话，必须要实现对应的SQL XML 代码 -->
-            <property name="mappers" value="com.suyh.version03.plugin.custom.SimpleMapper,com.suyh.version03.plugin.custom.LikeMapper"/>
+            <property name="mappers" value="com.suyh.version03.plugin.custom.mapper.SimpleMapper,com.suyh.version03.plugin.custom.mapper.LikeMapper"/>
             <!-- 添加swagger 注解 -->
             <property name="ann_swagger" value="true"/>
         </plugin>
@@ -85,7 +85,7 @@
             <!-- 3. 我们还可以对指定表添加父类。就像下面的crm_customer_info 一样添加父类属性标签 -->
             <!-- 4. 如果父类已经 implement Serializable  上面就不要配置这个插件了 -->
             <!-- 5. 这个类必须要添加到我的这个工程中来。类名路径必须完全一样。 -->
-            <property name="rootClass" value="com.suyh.version03.model.BaseModel"/>
+            <property name="rootClass" value="com.suyh.version03.plugin.custom.model.BaseModel"/>
         </javaModelGenerator>
 
         <!-- 生成mapxml文件 -->
@@ -117,7 +117,7 @@
                enableSelectByPrimaryKey="true"
 
                enableUpdateByPrimaryKey="false">
-            <property name="rootClass" value="com.suyh.version03.model.BaseModel"/>
+            <property name="rootClass" value="com.suyh.version03.plugin.custom.model.BaseModel"/>
             <!-- 主键生成方式 -->
             <!--            <generatedKey column="customer_id" sqlStatement="Mysql" identity="true"/>-->
         </table>

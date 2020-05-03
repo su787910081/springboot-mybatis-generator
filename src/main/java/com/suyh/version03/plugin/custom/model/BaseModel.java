@@ -1,10 +1,14 @@
-package com.suyh.version03.model;
+package com.suyh.version03.plugin.custom.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 这里是我自己定义的实体基类，在实际使用中。
+ * 要由使用者自己根据数据库表的创建来提供合适的父类
+ */
 public class BaseModel implements Serializable {
     private static final long serialVersionUID = 1L;
 

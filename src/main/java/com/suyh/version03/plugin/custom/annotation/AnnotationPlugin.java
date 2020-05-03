@@ -1,5 +1,6 @@
-package com.suyh.version03.plugin.custom;
+package com.suyh.version03.plugin.custom.annotation;
 
+import com.suyh.version03.plugin.custom.constants.Constants;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
