@@ -14,6 +14,10 @@
 
     <!-- defaultModelType="flat" 大数据字段，不分表 -->
     <context id="suyh" defaultModelType="hierarchical" targetRuntime="MyBatis3Simple">
+        <!-- 指定数据库ID，目前我还不知道这个工具是怎么判断连接数据库的。所以在这里添加一下 -->
+        <!-- 这里目前仅是用来做模糊查询的 -->
+        <!-- 目前就两种，mysql/oracle -->
+        <property name="dbId" value="oracle"/>
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
         <!-- 生成的 Java 文件的编码 -->
@@ -28,7 +32,7 @@
         <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
 
         <!-- 生成的entity，将implements Serializable -->
-        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+<!--        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>-->
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
         <plugin type="com.suyh.version03.plugin.custom.AnnotationPlugin">
             <!-- 自定义配置属性  -->
@@ -70,21 +74,30 @@
         </javaTypeResolver>
 
         <!-- 生成实体的位置 -->
-        <javaModelGenerator targetPackage="com.suyh.version03.model" targetProject="src/main/java">
+        <!-- targetProject 指定的目录必须存在 -->
+        <javaModelGenerator targetPackage="com.suyh.model" targetProject="src/main/outer">
             <property name="enableSubPackages" value="true"/>
             <!-- 在实体类的set 方法中直接trim() -->
             <property name="trimStrings" value="true"/>
+            <!-- 添加实体基类 -->
+            <!-- 1. 若有重复的字段，则不会添加。但是必须属性和类型完全匹配。 -->
+            <!-- 2. 只能处理当前父类的字段，若此类还有父类，则这个父类里面的属性将不会被检查到  -->
+            <!-- 3. 我们还可以对指定表添加父类。就像下面的crm_customer_info 一样添加父类属性标签 -->
+            <!-- 4. 如果父类已经 implement Serializable  上面就不要配置这个插件了 -->
+            <!-- 5. 这个类必须要添加到我的这个工程中来。类名路径必须完全一样。 -->
+            <property name="rootClass" value="com.suyh.version03.model.BaseModel"/>
         </javaModelGenerator>
 
         <!-- 生成mapxml文件 -->
-        <!-- 这个目录必须存在，若不存在则不会生成对应的文件 -->
-        <sqlMapGenerator targetPackage="mybatis/version03/mapper" targetProject="src/main/resources/">
+        <!-- 这个目录必须存在，若不存在则不会生成对应的文件。好像不是必须存在呢。不过先建好为好嘛。 -->
+        <!-- 上面说的目录必须存在，应该说的是 targetProject 属性所指定的目录必须存在。 -->
+        <sqlMapGenerator targetPackage="resources/mybatis/mapper" targetProject="src/main/outer/">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- 生成 Mapper XML 的位置 -->
-        <javaClientGenerator targetPackage="com.suyh.version03.mapper"
-                             type="XMLMAPPER" targetProject="src/main/java">
+        <javaClientGenerator targetPackage="com.suyh.mapper"
+                             type="XMLMAPPER" targetProject="src/main/outer">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
@@ -104,6 +117,7 @@
                enableSelectByPrimaryKey="true"
 
                enableUpdateByPrimaryKey="false">
+            <property name="rootClass" value="com.suyh.version03.model.BaseModel"/>
             <!-- 主键生成方式 -->
             <!--            <generatedKey column="customer_id" sqlStatement="Mysql" identity="true"/>-->
         </table>

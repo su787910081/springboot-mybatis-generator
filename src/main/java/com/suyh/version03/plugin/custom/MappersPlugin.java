@@ -42,6 +42,7 @@ public class MappersPlugin extends PluginAdapter {
     private final Set<FullyQualifiedJavaType> mapperTypes = new HashSet<>();
     // 过滤器实体，模糊查询时必须要true
     private boolean filterEntity = false;
+    private String dbId = "";
 
     @Override
     public void setContext(Context context) {
@@ -58,6 +59,7 @@ public class MappersPlugin extends PluginAdapter {
         if (StringUtils.isEmpty(proDateFormat)) {
             dateFormat = proDateFormat;
         }
+        dbId = context.getProperty(Constants.PRO_DB_ID);
     }
 
     // validate方法调用，该方法一般用于验证传给参数的正确性，如果该方法返回false，则该插件结束执行
@@ -360,7 +362,7 @@ public class MappersPlugin extends PluginAdapter {
         if (annotations.contains(AnnotationEnum.SWAGGER)) {
             // 添加Swagger 注解
             String strAnnotation = String.format(
-                    "@ApiModelProperty(value = \"日期匹配左边界。%s\")", remarks);
+                    "@ApiModelProperty(value = \"日期匹配边界。%s\")", remarks);
             field.addAnnotation(strAnnotation);
         }
 
@@ -616,15 +618,14 @@ public class MappersPlugin extends PluginAdapter {
         ifLikePropertyElement.addAttribute(new Attribute("test", ifPropertyValue));
 
         String content = null;
-        String dbSource = "oracle";
-        if ("mysql".equals(dbSource)) {
-            // TODO: mysql 还没有实现。模糊查询字符串拼接。
-            throw new RuntimeException("mysql 还没有实现。模糊查询字符串拼接。");
-        } else if ("oracle".equals(dbSource)) {
+        if (Constants.DB_ID_MYSQL.equals(dbId)) {
+            content = String.format("AND %s LIKE concat('%%', #{filter.%s, jdbcType = %s}, '%%')",
+                    columnName, javaProperty, jdbcTypeName);
+        } else if (Constants.DB_ID_ORACLE.equals(dbId)) {
             content = String.format("AND %s LIKE '%%' || #{filter.%s, jdbcType = %s} || '%%'",
                     columnName, javaProperty, jdbcTypeName);
         } else {
-            throw new RuntimeException("未知(未实现模糊查询)数据库类型: " + dbSource);
+            throw new RuntimeException("未知(未实现模糊查询)数据库类型: " + dbId);
         }
         ifLikePropertyElement.addElement(new TextElement(content));
 
