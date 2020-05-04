@@ -12,7 +12,7 @@ import java.util.List;
 public class DynamicPluginMain {
     public static void main(String[] args) {
         //读取文件
-        String filePath = "/mybatis/version03/generatorConfig-v3.xml";
+        String filePath = "/mybatis/version03/generatorConfig-ynwl.xml";
         String generatorConfig = DynamicPluginMain.class.getResource(filePath).getFile();
         File configFile = new File(generatorConfig);
         List<String> warnings = new ArrayList<>();

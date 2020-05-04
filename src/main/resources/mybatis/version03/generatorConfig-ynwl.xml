@@ -32,8 +32,8 @@
         <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
 
         <!-- 生成的entity，将implements Serializable -->
-<!--        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>-->
-<!--        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>-->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
         <!-- 添加指定注解 -->
         <plugin type="com.suyh.version03.plugin.custom.annotation.AnnotationPlugin">
             <!-- 自定义配置属性  -->
@@ -55,10 +55,10 @@
         </plugin>
 
         <!--数据库链接地址账号密码-->
-        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
-                        connectionURL="jdbc:oracle:thin:@docker:1521:XE"
-                        userId="AfterSales"
-                        password="oracle_pwd">
+        <jdbcConnection driverClass="oracle.jdbc.OracleDriver"
+                        connectionURL="jdbc:oracle:thin:@10.38.16.158:1521:XE"
+                        userId="XHWL_OMS"
+                        password="ynwl2020$#">
             <!-- 对实体类添加注释映射到表的注释 -->
             <!-- 设置 useInformationSchema 属性为 true -->
             <property name="useInformationSchema" value="true"/>
@@ -77,7 +77,7 @@
 
         <!-- 生成实体的位置 -->
         <!-- targetProject 指定的目录必须存在 -->
-        <javaModelGenerator targetPackage="com.suyh.model" targetProject="src/main/outer">
+        <javaModelGenerator targetPackage="com.isoftstone.hig.oms.api.entity" targetProject="src/main/outer">
             <property name="enableSubPackages" value="true"/>
             <!-- 在实体类的set 方法中直接trim() -->
             <property name="trimStrings" value="true"/>
@@ -98,7 +98,7 @@
         </sqlMapGenerator>
 
         <!-- 生成 Mapper 接口JAVA 文件的位置 -->
-        <javaClientGenerator targetPackage="com.suyh.mapper"
+        <javaClientGenerator targetPackage="com.isoftstone.hig.oms.repository"
                              type="XMLMAPPER" targetProject="src/main/outer">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
@@ -107,7 +107,7 @@
         <!-- 需要生成的实体类对应的表名，多个实体类复制多份该配置即可 -->
         <!-- 每一个table 标签对应数据库中的一张表 -->
         <!-- 客户/供应商基本信息表结构 -->
-        <table tableName="crm_customer_info"
+        <table tableName="OMS_ORDER_PUSH_KAFKA"
                enableCountByExample="true"
                enableUpdateByExample="true"
                enableDeleteByExample="true"
@@ -119,40 +119,11 @@
                enableSelectByPrimaryKey="true"
 
                enableUpdateByPrimaryKey="false">
-            <property name="rootClass" value="com.suyh.model.BaseModel"/>
+<!--            <property name="rootClass" value="com.suyh.model.BaseModel"/>-->
             <!-- 主键生成方式 -->
             <!--            <generatedKey column="customer_id" sqlStatement="Mysql" identity="true"/>-->
         </table>
 
-        <!-- 结算信息表结构 -->
-        <table tableName="crm_settle_money_info"
-               enableCountByExample="true"
-               enableUpdateByExample="true"
-               enableDeleteByExample="true"
-               enableSelectByExample="true"
-               selectByExampleQueryId="true"
-
-               enableDeleteByPrimaryKey="true"
-               enableInsert="true"
-               enableSelectByPrimaryKey="true"
-
-               enableUpdateByPrimaryKey="false">
-        </table>
-
-        <!-- 联系人信息 -->
-        <table tableName="crm_contacts_info"
-               enableCountByExample="true"
-               enableUpdateByExample="true"
-               enableDeleteByExample="true"
-               enableSelectByExample="true"
-               selectByExampleQueryId="true"
-
-               enableDeleteByPrimaryKey="true"
-               enableInsert="true"
-               enableSelectByPrimaryKey="true"
-
-               enableUpdateByPrimaryKey="false">
-        </table>
 
     </context>
 
