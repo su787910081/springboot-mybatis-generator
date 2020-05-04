@@ -13,6 +13,8 @@ BEGIN
     END IF;
 END;
 
+
+
 CREATE TABLE crm_customer_info (
     customer_id VARCHAR(36) NOT NULL PRIMARY KEY,
     created_by VARCHAR(30) NULL,
