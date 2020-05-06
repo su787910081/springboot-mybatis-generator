@@ -77,7 +77,7 @@
 
         <!-- 生成实体的位置 -->
         <!-- targetProject 指定的目录必须存在 -->
-        <javaModelGenerator targetPackage="com.isoftstone.hig.oms.api.entity" targetProject="src/main/outer">
+        <javaModelGenerator targetPackage="com.isoftstone.hig.oms.api.entity" targetProject="src/main/outer/model">
             <property name="enableSubPackages" value="true"/>
             <!-- 在实体类的set 方法中直接trim() -->
             <property name="trimStrings" value="true"/>
@@ -93,13 +93,13 @@
         <!-- 生成mapxml文件 -->
         <!-- 这个目录必须存在，若不存在则不会生成对应的文件。好像不是必须存在呢。不过先建好为好嘛。 -->
         <!-- 上面说的目录必须存在，应该说的是 targetProject 属性所指定的目录必须存在。 -->
-        <sqlMapGenerator targetPackage="resources/mapper" targetProject="src/main/outer/">
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/outer/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- 生成 Mapper 接口JAVA 文件的位置 -->
         <javaClientGenerator targetPackage="com.isoftstone.hig.oms.repository"
-                             type="XMLMAPPER" targetProject="src/main/outer">
+                             type="XMLMAPPER" targetProject="src/main/outer/mapper">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
